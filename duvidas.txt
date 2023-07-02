@@ -1,0 +1,6 @@
+
+
+*Future work*
+
+-> meter \ref{} quando estamos a falar da solução para testes virtuais
+-> o que meter na parte de testes físicos
