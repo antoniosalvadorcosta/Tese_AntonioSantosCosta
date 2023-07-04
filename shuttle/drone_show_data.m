@@ -23,7 +23,8 @@ end
 
 saves_folder = 'saves/';
 if ~exist('filename','var') || isempty(filename)
-    filename = [datestr(now,30) '_simul_'];
+    %filename = [datestr(now,30) '_simul_'];
+    filename = ['_simul_'];
 end
 do_print = 1; % set to 1 to plot each plot in a PDF file (for latex reports)
 do_save_workspace = 0; % set to 1 to save workspace to *.mat file

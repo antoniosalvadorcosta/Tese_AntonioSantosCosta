@@ -20,11 +20,13 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
     
     if P.scenario >= 3
-        f_d = 
-
+        f_d = 0;
+    end
     % compute thrust
     T = f_d'*zB; 
-
+    
+    
+    
     % compute desired rotation matrix
     zB_d = f_d/norm(f_d);
     xC_d = [cos(psi_d);sin(psi_d);0];
