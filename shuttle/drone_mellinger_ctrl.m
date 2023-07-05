@@ -11,6 +11,11 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     % auxiliary variables:
     zW = [0;0;1];
     zB = R(:,3);
+    dx = 0.50;
+    dy = 0.236;
+    dz = 0;
+    D = diag ([dx, dy, dz]);
+    kh = 0.009;
 
     % define translation errors
     e_p = p - p_d;
@@ -18,15 +23,25 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     
     % desired force vector with attitude
     f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
-    
     if P.scenario >= 3
-        f_d = 0;
+    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - R*D*R'*v_d;
     end
+    
+    
     % compute thrust
+    if P.scenario >= 3
+    T= f_dr'*zB - kh*(v'*(R(:,1)+R(:,2)))^2;
+    else
     T = f_d'*zB; 
-
+    end
+    
     % compute desired rotation matrix
+    if P.scenario >= 3
+    zB_d = f_dr/norm(f_dr);
+    else
     zB_d = f_d/norm(f_d);
+    end
+    
     xC_d = [cos(psi_d);sin(psi_d);0];
     yB_d = skew(zB_d)*xC_d/norm(skew(zB_d)*xC_d);
     xB_d = skew(yB_d)*zB_d;
@@ -61,4 +76,6 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
 %     end
     
 end
+
+
 

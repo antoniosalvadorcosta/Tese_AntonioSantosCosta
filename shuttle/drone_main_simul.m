@@ -2,7 +2,7 @@
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
 % Summary: simulate simple dynamic system model of a drone
-drone_init_1;
+drone_init_3;
 
 % main time loop for simulation
 for k = 1:Nsim
