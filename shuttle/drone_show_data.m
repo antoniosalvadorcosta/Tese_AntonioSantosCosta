@@ -120,6 +120,8 @@ zlabel('z [m]');
 legend('start','end','trajectory','Location','southeast');
 print2pdf([imgs_folder filename '_traj'],do_print);
 
+% --------------------------------------------------- Control Variables
+% --------------------
 figure(101);
 subplot(411);
 plot(t,T{1},'Color',dcolors{1});
