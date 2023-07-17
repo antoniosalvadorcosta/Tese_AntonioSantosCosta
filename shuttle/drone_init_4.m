@@ -25,13 +25,13 @@ Param.Rad = 5;        % radius of circle
 Param.omn = 2*pi/20;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = 5;
+Param.Vw = 9;
 
 % M690B drone 
 % (guessing parameters! needs identification)
 Param.m = 5;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 1.15*10^-7;     % frame drag coeficient
+Param.D = 1.15*10^-7;     % frame drag coeficient (small diference)
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);
@@ -47,11 +47,11 @@ Param.kom= diag([0.5,0.5,0.5]);
 
 %air density
 Param.air_d = 1.3;
-Param.Pa = [0.8 0 0;
-            0 0.8 0;
-            0 0 0.35];
+Param.Pa = [0.6 0 0;
+            0 0.6 0;
+            0 0 0.5];
 %Area swept by the rotor
-Param.A = 0.025;
+Param.A = 0.4712; %(pi*radius)
 Param.rotor_radius = 0.15;
 
 % % Crazyflie 2.0 based on 

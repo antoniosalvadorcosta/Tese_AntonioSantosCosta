@@ -24,6 +24,9 @@ function [dp,dv,dR,dom] = drone_3dfull_dyn(v,R,om,T,tau,P)
        disp(T);  
     else
         vi = sqrt(T/(2*P.air_d*P.A));
+        
+            disp(vi)
+       
     end
        
     aux = v-P.Vw-vi;    

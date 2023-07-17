@@ -19,19 +19,19 @@ function [dp,dv,dR,dom] = drone_3dfull_dyn(v,R,om,T,tau,P)
     %---------------------Trajectory following by one drone ---------------
     if P.scenario == 3 || P.scenario == 4
         
-    if u(1) < 0
-       disp('Drone 2 unstable!');
-       disp(u(1));  
+    if T < 0
+       disp('Drone unstable!');
+       disp(T);  
     else
-        vi = sqrt(u(1)/(2*P.air_d*P.A));
+        vi = sqrt(T/(2*P.air_d*P.A));
+        if vi = 
+            disp(vi)
+        end
     end
-        disp('vi drone 2:');
-        disp(vi);
        
-    aux = v-Vw-vi;    
-    
+    aux = v-P.Vw-vi;    
     dp = v;
-    dv = -P.g*zW + T/P.m*zB - R*P.D*R'*v -(1/2)*P.air_d*P.Cd*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+    dv = -P.g*zW + T/P.m*zB - R*P.D*R'*v -(1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
     end
