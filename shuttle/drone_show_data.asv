@@ -209,20 +209,17 @@ ylabel('$$z(t)$$ [m]');
 print2pdf([imgs_folder filename '_pos'],do_print);
 
 %---> root min square error x(1,2,3))
+diff_x = sum((x{iD}(1,:)-p_ref{iD}(1,:))^2);
+diff_y = sum((x{iD}(2,:)-p_ref{iD}(2,:))^2);
+diff_z = sum((x{iD}(3,:)-p_ref{iD}(3,:))^2);
 
-diff_x = sum((x{1}(1,:)-p_ref{1}(1,:)).^2);
-diff_y = sum((x{1}(2,:)-p_ref{1}(2,:)).^2);
-diff_z = sum((x{1}(3,:)-p_ref{1}(3,:)).^2);
+rm_x = sqrt(diff_x/5);
+rm_y = sqrt(diff_y/5);
+rm_z = sqrt(diff_z/5);
 
-rm_x = sqrt(diff_x/numel(x{1}(1,:)));
-rm_y = sqrt(diff_y/numel(x{1}(2,:)));
-rm_z = sqrt(diff_z/numel(x{1}(3,:)));
-
-disp("Root min square error:")
-disp(rm_x);
+disp(rm_x)
 disp(rm_y);
 disp(rm_z);
-
 %------------------------------ VELOCITY ----------------------------------
 figure(103);
 subplot(311);

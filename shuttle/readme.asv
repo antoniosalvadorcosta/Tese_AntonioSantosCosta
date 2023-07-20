@@ -5,8 +5,8 @@
     . Scenario 1: Mellinger controller, all aerodynamic conditions, step signal
     . Scenario 2: Mellinger controller, all aerodynamic conditions, circle trajectory, v_ref = 0, a_ref = 0
     . Scenario 3: Mellinger controller, all aerodynamic conditions, circle trajectory, derivative inputs
-    . Scenario 4: Mellinger controller + rotor drag compensaton, all aerodynamic conditions,circle trajectory, derivative inputs
-    . Scenario 5: Mellinger controller + rotor drag and frame drag compensaton, all aerodynamic conditions,circle trajectory, derivative inputs
+    . Scenario 4: Mellinger controller + rotor drag compensaton, all aerodynamic conditions,circle trajectory, normal_inputs
+    . Scenario 5: Mellinger controller + rotor drag and frame drag compensaton, all aerodynamic conditions,circle trajectory, normal_inputs
 - Plots of the results are made using the script `drone_show_data.m`
 
 ## Acknowledgments and copyright
