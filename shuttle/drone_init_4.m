@@ -25,7 +25,7 @@ Param.Rad = 5;        % radius of circle
 Param.omn = 2*pi/20;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = 2;
+Param.Vw = 5;
 
 % M690B drone 
 % (guessing parameters! needs identification)
