@@ -210,18 +210,22 @@ print2pdf([imgs_folder filename '_pos'],do_print);
 
 %---> root min square error x(1,2,3))
 
-diff_x = sum((x{1}(1,:)-p_ref{1}(1,:)).^2);
-diff_y = sum((x{1}(2,:)-p_ref{1}(2,:)).^2);
-diff_z = sum((x{1}(3,:)-p_ref{1}(3,:)).^2);
-
-rm_x = sqrt(diff_x/numel(x{1}(1,:)));
-rm_y = sqrt(diff_y/numel(x{1}(2,:)));
-rm_z = sqrt(diff_z/numel(x{1}(3,:)));
+rmse_x = rms(x{1}(1,:)-p_ref{1}(1,:));
+rmse_y = rms(x{1}(2,:)-p_ref{1}(2,:));
+rmse_z = rms(x{1}(3,:)-p_ref{1}(3,:));
 
 disp("Root min square error:")
-disp(rm_x);
-disp(rm_y);
-disp(rm_z);
+disp(rmse_x);
+disp(rmse_y);
+disp(rmse_z);
+
+disp("error:")
+errorx= x{1}(1,:)-p_ref{1}(1,:);
+disp(abs(errorx(length(errorx))));
+errory= x{1}(2,:)-p_ref{1}(2,:);
+disp(abs(errory(length(errory))));
+errorz= x{1}(3,:)-p_ref{1}(3,:);
+disp(abs(errorz(length(errorz))));
 
 %------------------------------ VELOCITY ----------------------------------
 figure(103);

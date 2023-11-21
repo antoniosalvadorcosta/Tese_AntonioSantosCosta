@@ -14,6 +14,7 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     dx = 0.50;
     dy = 0.236;
     dz = 0;
+    
     D = diag ([dx, dy, dz]);
     kh = 0.009;
 
@@ -22,24 +23,39 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     e_v = v - v_d;
    
     % desired force vector with attitude
-    f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
-    if P.scenario > 3
-    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - R*D*R'*v_d;
+     
+    if P.scenario == 4
+        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - R*D*R'*v;
+    else 
+        f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;   
+    end
+    
+    if P.scenario == 5
+        if T < 0
+           disp('Drone unstable!');
+           disp(T);  
+        else
+            vi = sqrt(T/(2*P.air_d*P.A));
+        end
+
+        aux = v-P.Vw-vi; 
+        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + R*D*R'*v + (1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+        
     end
     
     
     % compute thrust
     if P.scenario >= 4
-    T= f_dr'*zB - kh*(v'*(R(:,1)+R(:,2)))^2;
+        T= f_dr'*zB; % kh*(v'*(R(:,1)+R(:,2)))^2;
     else
-    T = f_d'*zB; 
+        T = f_d'*zB; 
     end
     
     % compute desired rotation matrix
     if P.scenario >= 4
-    zB_d = f_dr/norm(f_dr);
+        zB_d = f_dr/norm(f_dr);
     else
-    zB_d = f_d/norm(f_d);
+        zB_d = f_d/norm(f_d);
     end
     
     xC_d = [cos(psi_d);sin(psi_d);0];
