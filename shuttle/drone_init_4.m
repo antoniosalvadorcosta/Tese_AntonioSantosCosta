@@ -5,7 +5,6 @@
 
 clear all;
 
-
 % Model and simulation parameters
 Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period

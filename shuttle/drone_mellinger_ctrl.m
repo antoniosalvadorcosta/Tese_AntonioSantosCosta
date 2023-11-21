@@ -30,6 +30,7 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
         f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;   
     end
     
+    T = 0;
     if P.scenario == 5
         if T < 0
            disp('Drone unstable!');
@@ -37,7 +38,6 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
         else
             vi = sqrt(T/(2*P.air_d*P.A));
         end
-
         aux = v-P.Vw-vi; 
         f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + R*D*R'*v + (1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
         

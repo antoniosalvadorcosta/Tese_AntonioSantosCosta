@@ -19,6 +19,7 @@ end
 
 if P.scenario == 4
 imgs_folder = 'figures/rotor_drag/sc4_';
+disp(imgs_folder)
 end
 
 saves_folder = 'saves/';
