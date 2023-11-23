@@ -19,11 +19,13 @@ end
 
 if P.scenario == 4
 imgs_folder = 'figures/rotor_drag/sc4_';
+disp(imgs_folder)
 end
 
 saves_folder = 'saves/';
 if ~exist('filename','var') || isempty(filename)
-    filename = [datestr(now,30) '_simul_'];
+    %filename = [datestr(now,30) '_simul_'];
+    filename = ['_simul_'];
 end
 do_print = 1; % set to 1 to plot each plot in a PDF file (for latex reports)
 do_save_workspace = 0; % set to 1 to save workspace to *.mat file
@@ -119,6 +121,8 @@ zlabel('z [m]');
 legend('start','end','trajectory','Location','southeast');
 print2pdf([imgs_folder filename '_traj'],do_print);
 
+% --------------------------------------------------- Control Variables
+% --------------------
 figure(101);
 subplot(411);
 plot(t,T{1},'Color',dcolors{1});
@@ -179,6 +183,8 @@ plot(t,p_ref{1}(2,:),'Color',sstgray);
 hold on;
 plot(t,x{1}(2,:),'Color',dcolors{1});
 
+
+
 for iD = 2:Param.nD
     plot(t,p_ref{iD}(2,:),'Color',sstgray);
     plot(t,x{iD}(2,:),'Color',dcolors{iD});
@@ -202,6 +208,25 @@ legend('Z Reference', 'Z Position')
 xlabel('$$t$$ [s]');
 ylabel('$$z(t)$$ [m]');
 print2pdf([imgs_folder filename '_pos'],do_print);
+
+%---> root min square error x(1,2,3))
+
+rmse_x = rms(x{1}(1,:)-p_ref{1}(1,:));
+rmse_y = rms(x{1}(2,:)-p_ref{1}(2,:));
+rmse_z = rms(x{1}(3,:)-p_ref{1}(3,:));
+
+disp("Root min square error:")
+disp(rmse_x);
+disp(rmse_y);
+disp(rmse_z);
+
+disp("error:")
+errorx= x{1}(1,:)-p_ref{1}(1,:);
+disp(abs(errorx(length(errorx))));
+errory= x{1}(2,:)-p_ref{1}(2,:);
+disp(abs(errory(length(errory))));
+errorz= x{1}(3,:)-p_ref{1}(3,:);
+disp(abs(errorz(length(errorz))));
 
 %------------------------------ VELOCITY ----------------------------------
 figure(103);

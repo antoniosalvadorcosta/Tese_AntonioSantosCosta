@@ -5,14 +5,13 @@
 
 clear all;
 
-
 % Model and simulation parameters
 Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
 Param.nD = 1; % number of drones
-Param.scenario=3; %scenario for simulation with melling controller considering rotor drag to response with uadratic wave
+Param.scenario=4; %scenario for simulation with melling controller considering rotor drag to response with uadratic wave
 
 
 % reference parameters
@@ -27,16 +26,14 @@ Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
 Param.Vw = 5;
 
-
-
 % M690B drone 
 % (guessing parameters! needs identification)
 Param.m = 5;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 1.15*10^-7;    % frame drag coeficient
+Param.D = 1.15*10^-7;     % frame drag coeficient (small diference)
 Param.kp = diag([15,15,15]);
 Param.kv = diag([15,15,15]);
-Param.ki = diag([0,0,0]);
+Param.ki = diag([0,0,0]); %integrator gain
 Param.kR = diag([8,8,8]);
 Param.kom= diag([0.5,0.5,0.5]);
 
@@ -46,6 +43,7 @@ Param.air_d = 1.3;
 Param.Pa = [0.6 0 0;
             0 0.6 0;
             0 0 0.5];
+        
 %Area swept by the rotor
 Param.rotor_radius = 0.18;
 Param.A = pi*Param.rotor_radius^2;
@@ -84,13 +82,8 @@ for iD = 1:Param.nD
        
     end
     if Param.ref_mode == 3 % leniscate reference
-        phase{iD} = (iD-1)*Param.dphase;
-        v_ref{iD} = [2*cos(sqrt(2)*t); 2*sin(sqrt(2)*t).*cos(sqrt(2)*t); 3*ones(size(t))];
         p_ref{iD} = [2*cos(sqrt(2)*t); 2*sin(sqrt(2)*t).*cos(sqrt(2)*t); 3*ones(size(t))];
-        a_ref{iD} = [3*ones(size(1)),3*ones(size(1)),3*ones(size(1))];
-        j_ref{iD} = [ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{1});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{1});0*ones(size(t))];
-        psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
-        dpsi_ref{iD} = Param.omn*ones(size(psi_ref{iD}));
+    
     end 
     
     p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
