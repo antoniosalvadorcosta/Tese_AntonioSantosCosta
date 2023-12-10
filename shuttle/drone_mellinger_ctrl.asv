@@ -33,8 +33,8 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
         end
         
         aux = v-P.Vw-vi; 
-        rotor_drag_force = -R*D*R'*v;
-        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force;
+        drag_force = -D*R'*v;
+        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d p  drag_force;
     else 
         f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;   
     end
@@ -48,8 +48,7 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
             vi = sqrt(T/(2*P.air_d*P.A));
         end
         aux = v-P.Vw-vi; 
-        rotor_drag_force = -R*D*R'*v;
-        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + (1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + R*D*R'*v + (1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1));
         
     end
    

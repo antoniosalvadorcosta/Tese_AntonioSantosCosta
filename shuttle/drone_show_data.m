@@ -22,6 +22,11 @@ imgs_folder = 'figures/rotor_drag/sc4_';
 disp(imgs_folder)
 end
 
+if P.scenario == 5
+imgs_folder = 'figures/rotor_drag/sc5_';
+disp(imgs_folder)
+end
+
 saves_folder = 'saves/';
 if ~exist('filename','var') || isempty(filename)
     %filename = [datestr(now,30) '_simul_'];

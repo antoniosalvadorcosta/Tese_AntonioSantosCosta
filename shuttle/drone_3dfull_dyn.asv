@@ -32,7 +32,7 @@ function [dp,dv,dR,dom] = drone_3dfull_dyn(v,R,om,T,tau,P)
         end
       
         aux = v-P.Vw-vi;
-        drag_force = -R*D*R'*v;
+        drag_force = - D.*P.Pa*(aux).^2*sign(aux);
         
         dp = v;
         dv = -P.g*zW + T/P.m*zB + drag_force -(1/2)*P.air_d*P.D*P.Pa*((aux(1:3,1)).^2).*sign(aux(1:3,1)); %- R*P.D*R'*v;

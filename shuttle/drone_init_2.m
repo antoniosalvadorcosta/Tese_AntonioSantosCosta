@@ -101,7 +101,7 @@ for iD = 1:Param.nD
         a_ref{iD} = 0*[-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
         j_ref{iD} = 0*[ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
-        dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));s
+        dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
        
     end
     if Param.ref_mode == 3 % leniscate reference
