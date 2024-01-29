@@ -2,7 +2,7 @@
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
 % Summary: simulate simple dynamic system model of a drone
-drone_init_3;
+drone_init_4;
 
 % main time loop for simulation
 for k = 1:Nsim
@@ -27,6 +27,7 @@ for k = 1:Nsim
         
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
+        
         
         % nonlinear drone model (continuous time)
         [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);

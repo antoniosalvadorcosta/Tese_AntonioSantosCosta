@@ -7,14 +7,17 @@ P = Param;
 
 if P.scenario == 1
 imgs_folder = 'figures/mellinger/sc1_';
+disp(imgs_folder)
 end
 
 if P.scenario == 2
 imgs_folder = 'figures/mellinger/sc2_';
+disp(imgs_folder)
 end
 
 if P.scenario == 3
 imgs_folder = 'figures/rotor_drag/sc3_';
+disp(imgs_folder)
 end
 
 if P.scenario == 4
@@ -24,6 +27,11 @@ end
 
 if P.scenario == 5
 imgs_folder = 'figures/rotor_drag/sc5_';
+disp(imgs_folder)
+end
+
+if P.scenario == 6
+imgs_folder = 'figures/rotor_drag/sc6_';
 disp(imgs_folder)
 end
 
@@ -184,12 +192,10 @@ legend('X Reference', 'X Position')
 ylabel('$$x(t)$$ [m]');
 title('Drone position and reference');
 subplot(312);
+
 plot(t,p_ref{1}(2,:),'Color',sstgray);
 hold on;
 plot(t,x{1}(2,:),'Color',dcolors{1});
-
-
-
 for iD = 2:Param.nD
     plot(t,p_ref{iD}(2,:),'Color',sstgray);
     plot(t,x{iD}(2,:),'Color',dcolors{iD});
@@ -214,24 +220,28 @@ xlabel('$$t$$ [s]');
 ylabel('$$z(t)$$ [m]');
 print2pdf([imgs_folder filename '_pos'],do_print);
 
-%---> root min square error x(1,2,3))
 
-rmse_x = rms(x{1}(1,:)-p_ref{1}(1,:));
-rmse_y = rms(x{1}(2,:)-p_ref{1}(2,:));
-rmse_z = rms(x{1}(3,:)-p_ref{1}(3,:));
 
-disp("Root min square error:")
-disp(rmse_x);
-disp(rmse_y);
-disp(rmse_z);
+rmse_value = sqrt(mean(vecnorm(e_p).^2));
 
-disp("error:")
-errorx= x{1}(1,:)-p_ref{1}(1,:);
-disp(abs(errorx(length(errorx))));
-errory= x{1}(2,:)-p_ref{1}(2,:);
-disp(abs(errory(length(errory))));
-errorz= x{1}(3,:)-p_ref{1}(3,:);
-disp(abs(errorz(length(errorz))));
+
+if P.Vw == 1
+    fprintf('\nWind speed: %f\n', P.Vw);
+    fprintf('\nRMSE : %f\n', rmse_value);
+else
+    fprintf('\nWind speed: %f\n', P.Vw);
+
+    fprintf('\nRMSE : %f\n', rmse_value);
+end
+    
+
+% disp("error:")
+% errorx= x{1}(1,:)-p_ref{1}(1,:);
+% disp(abs(errorx(length(errorx))));
+% errory= x{1}(2,:)-p_ref{1}(2,:);
+% disp(abs(errory(length(errory))));
+% errorz= x{1}(3,:)-p_ref{1}(3,:);
+% disp(abs(errorz(length(errorz))));
 
 %------------------------------ VELOCITY ----------------------------------
 figure(103);
@@ -339,8 +349,30 @@ xlabel('$$t$$ [s]');
 ylabel('$$\omega_z(t)$$ [deg/s]');
 print2pdf([imgs_folder filename '_om'],do_print);
 
+figure(109);
+plot(t,psi_ref{1}(1,:)*180/pi,'Color',sstgray);
+hold on;
+plot(t,lbd{1}(3,:)*180/pi,'Color',dcolors{1});
+for iD = 2:Param.nD
+    plot(t,psi_ref{iD}(1,:)*180/pi,'Color',sstgray);
+    plot(t,lbd{iD}(3,:)*180/pi,'Color',dcolors{iD});
+end
+hold off;
+grid on;
+xlabel('$$t$$ [s]');
+legend('Yaw Reference', 'Yaw Real')
+ylabel('$$\psi(t)$$ [deg]');
+% Set the plot limits to fill the plot area
+set(gca, 'XLim', [min(t), max(t)], 'YLim', [0, 130]);
+print2pdf([imgs_folder filename '_yaw'],do_print);
+
+
 if do_save_workspace
     save([saves_folder filename '.mat']);
 end
 
-drone_animate(p,p_ref,lbd,t,dcolors);
+if P.scenario < 6
+    disp("Not displaying animation")
+else
+    drone_animate(p,p_ref,lbd,t,dcolors);
+end

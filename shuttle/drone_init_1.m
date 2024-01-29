@@ -17,14 +17,14 @@ Param.scenario = 1; %scenario for simulation with melling controller response wi
 
 % reference parameters
 Param.p_ref_static = [1;1;3];
-Param.psi_ref_static = pi/3;
+Param.psi_ref_static = pi/2;
 
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 2*pi/20;  % rotation frequency
+Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
-
+Param.Vw = 1;
 Param.ref_mode = 1; % reference: 1 - square wave; 2 - circle
 
 % M690B drone 
@@ -41,37 +41,16 @@ Param.D = 0.00;     % frame drag coeficient
 Param.kp = diag([15,15,15]);
 Param.kv = diag([15,15,15]);
 Param.ki = diag([0,0,0]);
-Param.kR = diag([8,8,8]);
-Param.kom= diag([0.5,0.5,0.5]);
+Param.kR = diag([20,20,20]);
+Param.kom= diag([2,2,2]);
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = diag([2,2,2]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
 
-% % Crazyflie 2.0 based on 
-% % Benoit Landry, "Planning and Control for Quadrotor Flight through Cluttered Environments", BSc, MIT, 2014
-% Param.m = 0.031;      % mass (added board)
-% Param.I = diag([2.3951e-5,2.3951e-5,3.2347e-5]);  % inertia tensor
-% Param.D = 0.001;      % frame drag coeficient
-% % Gains for nonlinear controller (crazyflie): OK for dTi = 0.001 -> 0.05
-% Param.kp = diag([8,8,12])*1e-2;
-% Param.kv = diag([8,8,10])*1e-2;
-% Param.ki = diag([0,0,0]);
-% Param.kR = diag([20,20,20])*1e-3;
-% Param.kom= diag([5,5,5])*1e-3;
 
-% % Iris drone
-% % Benoit Landry, "Planning and Control for Quadrotor Flight through Cluttered Environments", BSc, MIT, 2014
-% Param.m = 1.5;          % mass (added board)
-% Param.I = diag([3.5e-3,3.5e-3,5e-3]);  % inertia tensor
-% Param.D = 0.00;       % frame drag coeficient
-% % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
-% % Param.kp = diag([10,10,6]);
-% % Param.kv = diag([5,5,5]);
-% % Param.ki = zeros(3);
-% % Param.kR = diag([15,15,15]);
-% % Param.kom= diag([1,1,1]);
-% Param.kp = diag([8,8,6]);
-% Param.kv = diag([5,5,5]);
-% Param.ki = diag([0,0,0]);
-% Param.kR = diag([8,8,8]);
-% Param.kom= diag([0.5,0.5,0.5]);
+P.rotor_radius = 0.18;
 
 % initialize variables for all drones:
 t = 0:Param.dTi:Param.Tend;
@@ -94,18 +73,30 @@ for iD = 1:Param.nD
     x{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
     
     if Param.ref_mode == 1 % square wave reference
+        % Define synchronization time
         t_step = 8;
-        %sw = mod(t,t_step)>=t_step/2; % boolean wave
-        sw = mod(t,t_step)>=2;
-        p_ref{iD} = (p0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.p_ref_static*sw)*5;
+
+        % Generate switching signal
+        sw1 = mod(t,t_step) >= 5; % position
+        sw2 = mod(t,t_step) >= 2; % yaw angle
+
+        % Define position reference
+        p_ref{iD} = (p0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.p_ref_static*sw1)*2;
+
+        % Set velocity, acceleration, and jerk references to zeros
         v_ref{iD} = zeros(3,nt);
         a_ref{iD} = zeros(3,nt);
         j_ref{iD} = zeros(3,nt);
-        psi_ref{iD} = psi0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.psi_ref_static*sw;
+
+        % Generate attitude reference
+        psi_ref{iD} = psi0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.psi_ref_static*sw2;
+
+        % Set yaw rate reference to zeros
         dpsi_ref{iD} = zeros(1,Param.Tend/Param.dTi+1);
-    end   
-    
-    p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
-    psi_ref_all{iD} = [psi_ref{iD};dpsi_ref{iD}];
+        
+        end   
+
+        p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
+        psi_ref_all{iD} = [psi_ref{iD};dpsi_ref{iD}];
     
 end

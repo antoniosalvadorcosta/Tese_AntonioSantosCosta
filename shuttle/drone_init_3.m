@@ -5,7 +5,6 @@
 
 clear all;
 
-
 % Model and simulation parameters
 Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
@@ -22,10 +21,10 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 2*pi/3;  % rotation frequency
+Param.omn = 0.4;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = 5;
+Param.Vw = [10;10;10];
 
 
 
@@ -33,16 +32,15 @@ Param.Vw = 5;
 % (guessing parameters! needs identification)
 Param.m = 5;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 1.15*10^-7;    % frame drag coeficient
-Param.kp = diag([15,15,15]);
-Param.kv = diag([15,15,15]);
-Param.ki = diag([0,0,0]);
-Param.kR = diag([8,8,8]);
-Param.kom= diag([0.5,0.5,0.5]);
-
+Param.D = 0;    
+Param.kp = diag([20,20,20]);
+Param.kv = diag([10,10,10]);
+Param.ki = diag([2,2,2]);
+Param.kR = diag([30,30,30]);
+Param.kom= diag([1,1,1]);
 
 %air density
-Param.air_d = 1.3;
+Param.air_d = 1.225;
 Param.Pa = [0.6 0 0;
             0 0.6 0;
             0 0 0.5];
@@ -73,8 +71,7 @@ for iD = 1:Param.nD
     
     if Param.ref_mode == 2 % circle reference
         phase{iD} = (iD-1)*Param.dphase;
-%         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});(1+dh*(iD-1))*ones(size(t))];
-%         v_ref{iD} = [-Param.Rad*Param.omn*sin(omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+        
         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
         v_ref{iD} = [-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});Param.vz_d*ones(size(t))];
         a_ref{iD} = [-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
@@ -90,7 +87,7 @@ for iD = 1:Param.nD
         a_ref{iD} = [3*ones(size(1)),3*ones(size(1)),3*ones(size(1))];
         j_ref{iD} = [ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{1});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{1});0*ones(size(t))];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
-        dpsi_ref{iD} = Param.omn*ones(size(psi_ref{iD}));
+        dpsi_ref{iD} = 2*pi*ones(size(psi_ref{iD}));
     end 
     
     p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
