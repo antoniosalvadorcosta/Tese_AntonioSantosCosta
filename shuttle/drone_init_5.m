@@ -11,7 +11,7 @@ Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
-Param.nD = 1; % number of drones
+Param.nD = 2; % number of drones
 Param.scenario=5; %scenario for simulation with melling controller considering rotor drag to response with uadratic wave
 
 
@@ -22,10 +22,10 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 2;  % rotation frequency
+Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = [1;1;1];
+Param.Vw = [-5;-10;1];
 
 % M690B drone 
 % (guessing parameters! needs identification)
@@ -105,31 +105,7 @@ for iD = 1:Param.nD
     end
     
     
-    if Param.ref_mode == 3
-        Param.square_size = 5; % Side length of the square path
-        t_switch = 5; % Time at which the transition to the square path occurs
-        if t < t_switch
-            % Circular path
-            p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
-            v_ref{iD} = [-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});Param.vz_d*ones(size(t))];
-            a_ref{iD} = [-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
-            j_ref{iD} = [ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
-        else
-            % Square path
-            p_ref{iD} = zeros(4, 3);
 
-            for i = 1:4
-                p_ref{iD}(i, 1) = Param.square_size * cos(2 * pi * i / 4);
-                p_ref{iD}(i, 2) = Param.square_size * sin(2 * pi * i / 4);
-                p_ref{iD}(i, 3) = Param.vz_d * t + Param.p_ref_static(3);
-            end
-
-            v_ref{iD} = [-Param.square_size*2*pi*(1)/4*sin(2*pi*(1)/4);Param.square_size*2*pi*(1)/4*cos(2*pi*(1)/4);Param.vz_d*ones(size(t))];
-            a_ref{iD} = [0;0;0*ones(size(t))];
-            j_ref{iD} = [0;0;0*ones(size(t))];
-        end
-        
-    end
    
     p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
     psi_ref_all{iD} = [psi_ref{iD};dpsi_ref{iD}];

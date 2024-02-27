@@ -1,6 +1,6 @@
  % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
-function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d)
+function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD)
 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
@@ -29,56 +29,78 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
     e_v = v - v_d;
    
     % desired force vector with attitude
+  
     T = 0;
-    
-    if P.scenario > 3
-        if T < 0
-           disp('Drone unstable!');
-           disp(T);  
-        else
-            vi = sqrt(T/(2*P.air_d*P.A));
-        end
-        aux = v-P.Vw-R*[0;0;vi]; 
-        v_air = aux(1:3,1);
-        
-        frame_drag = 0;
-        rotor_drag_force = -R*D*R'*v_air;
-        
-        if P.scenario == 5
-            Cd = 0.03 * A / (P.m^0.5);
-            frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air.^2);
-        end
-        
-        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag;
-    else 
-        f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;   
-    end
-    
-   
-    
+    vi = 0;
+    vd = 0;
     if P.scenario == 6
+        
         if T < 0
            disp('Drone unstable!');
            disp(T);  
         else
-            vi = sqrt(T/(2*P.air_d*P.A));
+            if iD == 1
+                vi = sqrt(T/(2*P.air_d*P.A));
+                p1 = p(3,:);
+                p2 = P.d2_height;
+                vd = vi + vi*tanh(-2*(p1 - p2));
+            else
+                vi = sqrt(T/(2*P.air_d*P.A));
+                p2 = P.d2_height;
+            end
         end
-        aux = v-P.Vw-vi; 
-        v_air = aux(1:3,1);
+        
+        if iD == 2
+         
+           aux = v-P.Vw-R*[0;0;vi]-vd; 
+           v_air = aux(1:3,1);
+            
+        else
+            
+            aux = vi-P.Vw-R*[0;0;vi]; 
+            v_air = aux(1:3,1);
+           
+        end
+        
         
         rotor_drag_force = -R*D*R'*v_air;
         
         Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
         %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
         
-        frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air.^2);%.*sign(aux(1:3,1));
+        frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
         %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation 
         
         f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
         
-    end
+    else
     
- 
+        if P.scenario > 3 && P.scenario < 6
+            if T < 0
+               disp('Drone unstable!');
+               disp(T);  
+            else
+                vi = sqrt(T/(2*P.air_d*P.A));
+            end
+            aux = v-P.Vw-R*[0;0;vi]; 
+            v_air = aux(1:3,1);
+
+            frame_drag = 0;
+            rotor_drag_force = -R*D*R'*v_air;
+
+            if P.scenario >= 5 
+                Cd = 0.03 * A / (P.m^0.5);
+                frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air.^2);
+            end
+
+            f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag;
+        else 
+            f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;   
+        end
+    end
+   
+    
+
     % compute thrust
     if P.scenario >= 4
         T= f_dr'*zB; % kh*(v'*(R(:,1)+R(:,2)))^2;
@@ -126,7 +148,6 @@ function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d
         om_d = [p_des;q_des;r_des];
     end
     
-
     % compute torques
     e_om = om-om_d;
     e_R = 1/2*unskew(R_d'*R - R'*R_d);

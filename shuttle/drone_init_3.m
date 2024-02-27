@@ -21,10 +21,10 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 0.4;  % rotation frequency
+Param.omn = 2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = [10;10;10];
+Param.Vw = [0;0;0];
 
 
 

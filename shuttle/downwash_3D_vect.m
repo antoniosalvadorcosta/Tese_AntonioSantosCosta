@@ -1,0 +1,109 @@
+%% 2D Simulation
+
+% drones' characteristics
+m = 5;
+rotor_r = 0.18;
+T1 = 60;
+disk_area = pi*rotor_r^2;
+air_d = 1.225;
+
+% drone's 2 thrust in hover state
+T2 = m * 9.81;
+
+% thrust per rotor disk
+T1 = T1/4;
+T2 = T2/4;
+
+% simulation setup
+z_r = 3.0;
+z = 2:0.01:z_r;
+
+height_diff = z_r - z;
+
+% downwash shapping parameters
+% sugested by Gemini
+k = 0.8;                % between 0 and 1
+h = 2*rotor_r;          % in the range of rotor diameter or slightly larger
+
+% Drone 1 induced veocity per rotor 
+vi1 = sqrt(T1/(2*air_d*disk_area));
+
+% Drone 1 downwash velocity
+vc = vi1  + vi1*tanh(-k*(height_diff)/h);
+
+% Drone 2 induced velocity
+vi2 = sqrt(T2/(2*air_d*disk_area));
+
+% velocity necessary to affect
+v_turb = vi2 * 0.20;
+
+% position in z where downwash becames negligible
+z_dw_bound = z_r - (h/k) * atanh((v_turb/vi1) - 1);
+
+% radial distance where downwash becames negligible
+dw_radius = z_dw_bound - z_r ;
+
+condition = rotor_r ./sqrt(1 + tanh(-k*( height_diff )./h));
+
+vc(condition > dw_radius) = 0;
+
+figure(4);
+plot(z, vc, 'b');
+hold off;
+grid on;
+xlabel('$$z$$ [m]');
+legend('Downwash velocity')
+ylabel('$$Downwash$$ [m/s]');
+
+
+
+%% 3D Vectorial field
+% Define the position of the rotor disk
+disk_center = [1, 1, 5];
+disk_radius = 0.18;
+
+[X, Y, Z] = meshgrid(0:0.10:3, 0:0.10:3,0:0.25:5);
+x = reshape(X, [], 1);
+y = reshape(Y, [], 1);
+z = reshape(Z, [], 1);
+
+% Initialize arrays for velocity components
+u = zeros(size(x));
+v = zeros(size(y));
+w = zeros(size(z));
+
+% Compute the velocity field based on the downwash vector at each point
+for i = 1:numel(x)
+    % Calculate the radial distance from the rotor disk center
+    radial_dist = sqrt((x(i) - disk_center(1))^2 + (y(i) - disk_center(2))^2);
+    
+    % Check if the point is within the rotor disk
+    if radial_dist <= disk_radius
+        w(i) = vd_store(i); % Inside the rotor disk
+    else
+        w(i) = 0; % Outside the rotor disk (no downwash)
+    end
+end
+
+% Visualize the vector field
+quiver3(x, y, z, u, v, w, 'b'); % Blue arrows representing the field
+hold on;
+
+% Plot the rotor disk (a circle in 3D space)
+theta = linspace(0, 2*pi, 100);
+disk_x = disk_center(1) + disk_radius * cos(theta);
+disk_y = disk_center(2) + disk_radius * sin(theta);
+disk_z = disk_center(3) * ones(size(theta));
+plot3(disk_x, disk_y, disk_z, 'r', 'LineWidth', 2);
+
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+title('3D Vector Field of Downwash Speed around Rotor Disk');
+grid on;
+axis tight;
+view(30, 30); % Adjust the view angle
+
+
+
+
