@@ -21,28 +21,36 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 2*pi/3;  % rotation frequency
+Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = 5;
+Param.Vw = [0;0;0];
 
 % M690B drone 
 % (guessing parameters! needs identification)
 Param.m = 5;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 1.15*10^-7;     % frame drag coeficient (small diference)
-Param.kp = diag([15,15,15]);
-Param.kv = diag([15,15,15]);
-Param.ki = diag([0,0,0]); %integrator gain
-Param.kR = diag([8,8,8]);
-Param.kom= diag([0.5,0.5,0.5]);
+Param.D = 0;     % frame drag coeficient (small diference)
+Param.kp = diag([20,20,20]);
+Param.kv = diag([10,10,10]);
+Param.ki = diag([2,2,2]);
+Param.kR = diag([30,30,30]);
+Param.kom= diag([1,1,1]);
+
 
 
 %air density
-Param.air_d = 1.3;
+Param.air_d = 1.225;
+
+%Projected Area
 Param.Pa = [0.6 0 0;
             0 0.6 0;
             0 0 0.5];
+% Param.width = 0.6;
+% Param.length = 0.6;
+% Param.height = 0.5;
+% Param.Pa = (Param.width * Param.length)/2;
+
         
 %Area swept by the rotor
 Param.rotor_radius = 0.18;
@@ -71,8 +79,7 @@ for iD = 1:Param.nD
     
     if Param.ref_mode == 2 % circle reference
         phase{iD} = (iD-1)*Param.dphase;
-%         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});(1+dh*(iD-1))*ones(size(t))];
-%         v_ref{iD} = [-Param.Rad*Param.omn*sin(omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+       
         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
         v_ref{iD} = [-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});Param.vz_d*ones(size(t))];
         a_ref{iD} = [-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
@@ -82,7 +89,19 @@ for iD = 1:Param.nD
        
     end
     if Param.ref_mode == 3 % leniscate reference
-        p_ref{iD} = [2*cos(sqrt(2)*t); 2*sin(sqrt(2)*t).*cos(sqrt(2)*t); 3*ones(size(t))];
+        % constants
+        a = 0.5; % semi-major axis
+        b = 0.2; % semi-minor axis
+
+        % calculate time-dependent position, velocity, acceleration, and angular velocity
+        phase = 2*pi*t + iD*Param.dphase;
+
+        p_ref{iD} = [a*cos(phase), a*sin(phase), 0];
+        v_ref{iD} = [-a*sin(phase), a*cos(phase), 0];
+        a_ref{iD} = [-a^2*cos(2*phase), -a^2*sin(2*phase), 0];
+        j_ref{iD} = [-a^3*sin(2*phase), a^3*cos(2*phase), 0];
+        psi_ref{iD} = atan2(v_ref{iD}(2), v_ref{iD}(1));
+        dpsi_ref{iD} = 2*pi*ones(size(psi_ref{iD}));
     
     end 
     

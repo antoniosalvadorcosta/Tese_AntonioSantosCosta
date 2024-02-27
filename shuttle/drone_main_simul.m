@@ -2,7 +2,7 @@
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
 % Summary: simulate simple dynamic system model of a drone
-drone_init_3;
+
 
 % main time loop for simulation
 for k = 1:Nsim
@@ -23,13 +23,14 @@ for k = 1:Nsim
         dpsi_d = dpsi_ref{iD}(:,k);
 
         % mellinger controller
-        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d);
+        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d,iD);
         
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
         
+        
         % nonlinear drone model (continuous time)
-        [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);
+        [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param, iD);
         
         % discretization 
         pp = p{iD} + Param.dTi*dot_p;
@@ -44,12 +45,13 @@ for k = 1:Nsim
         if abs(1-norm(Rp'*Rp))>1e-4
             warning(['Problems with rotation matrix integration... stoping simulation: t = ' num2str(k*dTi) ' s.']);
             break;
-        end
+        end 
     
     end
 
     if abs(1-norm(Rp'*Rp))>1e-4
         break;
+    
     end
 end
 
@@ -59,5 +61,3 @@ for iD = 1:Param.nD
     x{iD}(:,k+1) = [];
     p{iD} = x{iD}(1:3,:);
 end
-
-drone_show_data;

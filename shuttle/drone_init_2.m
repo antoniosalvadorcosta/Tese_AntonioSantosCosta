@@ -7,6 +7,7 @@ clear all;
 
 
 % Model and simulation parameters
+
 Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
@@ -22,10 +23,20 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 2*pi/20;  % rotation frequency
-Param.dphase = -pi/12;% ref circle angular difference between drones
 
+Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
+Param.Vw = [0;0;0];
+
+%air density
+Param.air_d = 1.225;
+Param.Pa = [0.6 0 0;
+            0 0.6 0;
+            0 0 0.5];
+%Area swept by the rotor
+Param.rotor_radius = 0.18;
+Param.A = pi*Param.rotor_radius^2;
+
 
 % M690B drone 
 % (guessing parameters! needs identification)
@@ -38,40 +49,12 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.ki = zeros(3);
 % Param.kR = diag([15,15,15]);
 % Param.kom= diag([1,1,1]);
-Param.kp = diag([15,15,15]);
-Param.kv = diag([15,15,15]);
-Param.ki = diag([0,0,0]);
-Param.kR = diag([8,8,8]);
-Param.kom= diag([0.5,0.5,0.5]);
+Param.kp = diag([20,20,20]);
+Param.kv = diag([10,10,10]);
+Param.ki = diag([2,2,2]);
+Param.kR = diag([30,30,30]);
+Param.kom= diag([1,1,1]);
 
-% % Crazyflie 2.0 based on 
-% % Benoit Landry, "Planning and Control for Quadrotor Flight through Cluttered Environments", BSc, MIT, 2014
-% Param.m = 0.031;      % mass (added board)
-% Param.I = diag([2.3951e-5,2.3951e-5,3.2347e-5]);  % inertia tensor
-% Param.D = 0.001;      % frame drag coeficient
-% % Gains for nonlinear controller (crazyflie): OK for dTi = 0.001 -> 0.05
-% Param.kp = diag([8,8,12])*1e-2;
-% Param.kv = diag([8,8,10])*1e-2;
-% Param.ki = diag([0,0,0]);
-% Param.kR = diag([20,20,20])*1e-3;
-% Param.kom= diag([5,5,5])*1e-3;
-
-% % Iris drone
-% % Benoit Landry, "Planning and Control for Quadrotor Flight through Cluttered Environments", BSc, MIT, 2014
-% Param.m = 1.5;          % mass (added board)
-% Param.I = diag([3.5e-3,3.5e-3,5e-3]);  % inertia tensor
-% Param.D = 0.00;       % frame drag coeficient
-% % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
-% % Param.kp = diag([10,10,6]);
-% % Param.kv = diag([5,5,5]);
-% % Param.ki = zeros(3);
-% % Param.kR = diag([15,15,15]);
-% % Param.kom= diag([1,1,1]);
-% Param.kp = diag([8,8,6]);
-% Param.kv = diag([5,5,5]);
-% Param.ki = diag([0,0,0]);
-% Param.kR = diag([8,8,8]);
-% Param.kom= diag([0.5,0.5,0.5]);
 
 % initialize variables for all drones:
 t = 0:Param.dTi:Param.Tend;
@@ -94,10 +77,10 @@ for iD = 1:Param.nD
     x{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
     if Param.ref_mode == 2 % circle reference
       phase{iD} = (iD-1)*Param.dphase;
-%         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});(1+dh*(iD-1))*ones(size(t))];
-%         v_ref{iD} = [-Param.Rad*Param.omn*sin(omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+     
+        v_ref{iD} = 0*[-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
-        v_ref{iD} = 0*[-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});Param.vz_d*ones(size(t))];
+         
         a_ref{iD} = 0*[-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
         j_ref{iD} = 0*[ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
