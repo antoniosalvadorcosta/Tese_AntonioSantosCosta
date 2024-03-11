@@ -1,6 +1,6 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
-function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD,dw)
+function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD,dw, v_i)
 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
@@ -37,8 +37,9 @@ if T < 0
     disp('Drone unstable!');
     disp(T);
 else
-    vi = sqrt(T/(2*P.air_d*P.A));
+    vi = v_i;
 end
+
 
 if iD == 2
     

@@ -12,6 +12,7 @@ global vi_d2;
 
 vi_d2 = 0;
 pos_d2 = Param.p2;
+vi = 0;
 
 % main time loop for simulation
 for k = 1:Param.Nsim
@@ -31,30 +32,26 @@ for k = 1:Param.Nsim
         psi_d = psi_ref{iD}(:,k);
         dpsi_d = dpsi_ref{iD}(:,k);
 
-%         if k == 1 || iD == 2
-%             dw = 0;
-%         end
         
         % mellinger controller
-        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl_cpte(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d,iD,dw);
+        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl_cpte(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d,iD,dw,vi);
         
         
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
         
         
-        % downwash
-        
-        
+        % downwash calculation
         if iD == 2
-            dw =  f_dw3( p{1} , p{2}, T{1}(:,k),T{2}(:,k), Param);
+            dw =  f_dw3(p{1}, p{2}, T{1}(:,k), Param);
             vd_store = [vd_store; dw];
+            dw = -dw;
         end
         
         
         
         % nonlinear drone model (continuous time)
-        [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn_cpte(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param,iD,dw);
+        [dot_p,dot_v,dot_R,dot_om, vi] = drone_3dfull_dyn_cpte(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param,iD,dw);
         
         
         

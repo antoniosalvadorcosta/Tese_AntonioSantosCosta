@@ -1,4 +1,4 @@
-function [dp,dv,dR,dom] = drone_3dfull_dyn_cpte(v,R,om,T,tau,P,iD,dw)
+function [dp,dv,dR,dom, vi] = drone_3dfull_dyn_cpte(v,R,om,T,tau,P,iD,dw)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -84,6 +84,7 @@ if P.scenario > 1
         v_air = aux(1:3,1);
         
     else
+        
         aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
         v_air = aux(1:3,1);
     end

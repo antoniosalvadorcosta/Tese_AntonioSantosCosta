@@ -7,7 +7,7 @@ clear all;
 
 
 % Model and simulation parameters
-Param.Tend = 60;
+Param.Tend = 9;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
@@ -20,9 +20,9 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 1;  % rotation frequency
+Param.omn = 1;
 Param.dphase = -pi/12;% ref circle angular difference between drones
-Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
+Param.ref_mode = 3; % reference: 1 - square wave; 2 - circle
 Param.Vw = [0;0;0];
 
 % M690B drone
@@ -55,10 +55,12 @@ Param.Pa = [0.6 0 0;
 % Param.height = 0.3;
 % Param.Pa = (Param.width * Param.length)/2;
 
-%Area swept by the rotor
+% area swept by the rotor
 Param.rotor_radius = 0.18;
 Param.A = pi*Param.rotor_radius^2;
 
+% 4 scenarios simulated
+situation = 1;
 
 omn = Param.omn;
 
@@ -70,10 +72,8 @@ nu = 4;
 for iD = 1:Param.nD
     
 
-    
-    
     % set initial conditions
-    p0{iD} = [0;0;3];
+    p0{iD} = [4.5;3;3];
     v0{iD} = [0;0;0];
     psi0{iD} = pi/20*((Param.nD-1)/2-iD+1);
     R0{iD} = Euler2R([0;0;psi0{iD}]);
@@ -98,9 +98,22 @@ for iD = 1:Param.nD
         dot_dot_y = -2*b*sin(t).*cos(t).*(3*sin(t).^4 - 4*sin(t).^2 + 1);
         dot_dot_dot_x = b*cos(t).*(27*sin(t).^6 + 32*sin(t).^4 + 16*sin(t).^2 - 4);
         dot_dot_dot_y = b*sin(t).*(27*sin(t).^6 + 32*sin(t).^4 - 16*sin(t).^2 - 4);
+        
+         if  iD == 2
+            factor = 0;
+        else
+            factor = 1;
+        end
+        phase{iD} = (iD-1)*Param.dphase;
+        p_ref{iD} = [x_value;y_value;3*ones(size(t))];
+        v_ref{iD} = factor*[dot_x; dot_y ;zeros(size(t))];
+        a_ref{iD} = factor*[dot_dot_x ; dot_dot_y ;zeros(size(t))];
+        j_ref{iD} = factor*[ dot_dot_dot_x ;dot_dot_dot_y ;zeros(size(t))];
+        psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
+        dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
     end
     
-    if Param.ref_mode == 2
+    if Param.ref_mode == 2 %circular 
         
         r = 1.5;
         
@@ -109,21 +122,16 @@ for iD = 1:Param.nD
         dot_x = -r*omn*sin(omn*t);
         dot_y = r*omn*cos(omn*t);
         dot_dot_x = -r*omn^2*cos(omn*t);
+        
         dot_dot_y =  -r*omn^2*sin(omn*t);
         dot_dot_dot_x = r*omn^3*sin(omn*t);
         dot_dot_dot_y = -r*omn^3*cos(omn*t);
-    
-    end
         
-    
-        
-        if  iD == 2
+         if  iD == 2
             factor = 0;
         else
             factor = 1;
         end
-        
-        
         phase{iD} = (iD-1)*Param.dphase;
         p_ref{iD} = [x_value;y_value;3*ones(size(t))];
         v_ref{iD} = factor*[dot_x; dot_y ;zeros(size(t))];
@@ -131,14 +139,26 @@ for iD = 1:Param.nD
         j_ref{iD} = factor*[ dot_dot_dot_x ;dot_dot_dot_y ;zeros(size(t))];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
-  
+    
+    end
     
     
-    
-    
-    
-    
-    
+    if Param.ref_mode == 3 %circular with z motion 
+        
+         if  iD == 1
+            factor = 0;
+        else
+            factor = 1;
+        end
+         phase{iD} = (iD-1)*Param.dphase;
+     
+        p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
+        v_ref{iD} = factor*[-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});Param.vz_d*ones(size(t))];
+        a_ref{iD} = factor*[-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
+        j_ref{iD} = factor*[ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+        psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
+        dpsi_ref{iD} = Param.omn*ones(size(psi_ref{iD}));
+    end
     p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
     psi_ref_all{iD} = [psi_ref{iD};dpsi_ref{iD}];
     

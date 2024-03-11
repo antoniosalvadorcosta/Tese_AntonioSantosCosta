@@ -34,6 +34,12 @@ if P.scenario == 6
     imgs_folder = 'figures/capture_maneuvre/sc6_';
 end
 
+
+if situation == 1
+    scenario_dcrpt = "4 scenarios (2,3,4,5) simulated at once";
+    imgs_folder = 'figures/4_scenarios/allsc_';
+end 
+
 saves_folder = 'saves/';
 if ~exist('filename','var') || isempty(filename)
     %filename = [datestr(now,30) '_simul_'];
@@ -87,23 +93,34 @@ if exist('out','var')
 end
 
 % calculate and display rmse value
-if P.scenario == 6
+
+% wind simulations
+if tracking_sim == 0
     wind_rmse_values_slice = [];
-    e_p = p{2} - p_ref{2};
-    for i = 1:3
-        error = e_p(i,:);
-        rmse_value =  sqrt(mean((error).^2));
-        wind_rmse_values_slice = [wind_rmse_values_slice, rmse_value];
-    end
+    e_p = p{1} - p_ref{1};
+%     for i = 1:3
+%         error = e_p(i,:);
+%         rmse_value =  sqrt(mean((error).^2, "all"));
+%         wind_rmse_values_slice = [wind_rmse_values_slice, rmse_value];
+%     end
+
+    rmse_value =  sqrt(mean((e_p ).^2, "all"));
     fprintf('\nRMSE "%s":\n',scenario_dcrpt);
     fprintf('%f\n',wind_rmse_values_slice);
-% else
-% if P.scenario == 6
-%     e_p = p{1} - p_ref{1};
-%     rmse_value = sqrt(mean(e_p.^2));
-%     fprintf('RMSE drone bellow: %f\n', rmse_value);
-%    
+
+% other simulations    
+else
+    
+    e_p = p{1} - p_ref{1};
+    rmse_value = sqrt(mean(e_p.^2, "all"));
+    
+    fprintf('\nRMSE "%s":\n',scenario_dcrpt);
+    fprintf('%f\n',rmse_value);
+   
 end
+
+
+
 
 if show_simulations_plots ~= 0
     
@@ -131,31 +148,81 @@ if show_simulations_plots ~= 0
     nt = length(t);
     dt = mean(t(2:end)-t(1:end-1));
     
-    figure(100);
-    for iD = 1:Param.nD
-        hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
-        if iD == 1, hold on; end
-        href{iD} = plot3(p_ref{iD}(1,:),p_ref{iD}(2,:),p_ref{iD}(3,:),'--','Color',sstgray);
-        hp{iD} = plot3(p{iD}(1,:),p{iD}(2,:),p{iD}(3,:),'-','Color',dcolors{iD});
-        hd{iD} = drone_plot(p{iD}(1:3,1),lbd{iD}(:,1),[],dcolors{iD});
-        last_p = p{iD}(1:3,1);
-        for k = 2:10:nt
-            dp = norm(p{iD}(1:3,k) - last_p);
-            if dp > 3
-                drone_plot(p{iD}(1:3,k),lbd{iD}(:,k),[],dcolors{iD});
-                last_p = p{iD}(1:3,k);
+   
+    
+    if situation == 0
+        figure(100);
+        for iD = 1:Param.nD
+            hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
+            if iD == 1, hold on; end
+            href{iD} = plot3(p_ref{iD}(1,:),p_ref{iD}(2,:),p_ref{iD}(3,:),'--','Color',sstgray);
+            hp{iD} = plot3(p{iD}(1,:),p{iD}(2,:),p{iD}(3,:),'-','Color',dcolors{iD});
+            %hd{iD} = drone_plot(p{iD}(1:3,1),lbd{iD}(:,1),[],dcolors{iD});
+            last_p = p{iD}(1:3,1);
+            for k = 2:10:nt
+                dp = norm(p{iD}(1:3,k) - last_p);
+                if dp > 3
+                    %drone_plot(p{iD}(1:3,k),lbd{iD}(:,k),[],dcolors{iD});
+                    last_p = p{iD}(1:3,k);
+                end
             end
+            %drone_plot(p{iD}(1:3,end),lbd{iD}(:,end),[],dcolors{iD});
         end
-        drone_plot(p{iD}(1:3,end),lbd{iD}(:,end),[],dcolors{iD});
+        hold off;
+        %grid on;
+        axis equal;
+        % axis([-1.2 1.2 -1.2 1.2 0 3]);
+        xlabel('x [m]');
+        ylabel('y [m]');
+        zlabel('z [m]');
+        legend('Start', 'Reference', 'end');
+        
+    
+    % if it is the 4 drones' simulation
+    else
+            figure(100);
+	        hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
+	        href{1} = plot3(p_ref{1}(1,:),p_ref{1}(2,:),p_ref{1}(3,:),'--','Color',sstgray);
+	        for iD = 1:Param.nD
+	            if iD == 1, hold on; end
+	            hp{iD} = plot3(p{iD}(1,:),p{iD}(2,:),p{iD}(3,:),'-','Color',dcolors{iD});
+	        end
+	        hold off;
+	        %grid on;
+	        axis equal;
+	        % axis([-1.2 1.2 -1.2 1.2 0 3]);
+	        xlabel('x [m]');
+	        ylabel('y [m]');
+	        zlabel('z [m]');
+        legend('Reference', 'Scenario A', 'Scenario B', 'Scenario C', 'Scenario D');
+
+        % Reverse the y-axis direction
+        set(gca, 'YDir', 'reverse');
+
+        % Optionally, adjust other plot properties (e.g., axis limits, view angles)
+        axis equal;  % Equal aspect ratio
+        view(180, 90);  % View from upside-down perspective
+        
+        
+        
+        figure;
+	        hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
+	        href{1} = plot3(p_ref{1}(1,:),p_ref{1}(2,:),p_ref{1}(3,:),'--','Color',sstgray);
+	        for iD = 1:Param.nD
+	            if iD == 1, hold on; end
+	            hp{iD} = plot3(p{iD}(1,:),p{iD}(2,:),p{iD}(3,:),'-','Color',dcolors{iD});
+	        end
+	        hold off;
+	        %grid on;
+	        axis equal;
+	        % axis([-1.2 1.2 -1.2 1.2 0 3]);
+	        xlabel('x [m]');
+	        ylabel('y [m]');
+	        zlabel('z [m]');
+        legend('Reference', 'Scenario A', 'Scenario B', 'Scenario C', 'Scenario D');
+
+    
     end
-    hold off;
-    grid on;
-    axis equal;
-    % axis([-1.2 1.2 -1.2 1.2 0 3]);
-    xlabel('x [m]');
-    ylabel('y [m]');
-    zlabel('z [m]');
-    legend('start','end','trajectory','Location','southeast');
     print2pdf([imgs_folder filename '_traj'],do_print);
     
     % --------------------------------------------------- Control Variables
@@ -427,23 +494,25 @@ if show_simulations_plots ~= 0
     set(gca, 'XLim', [min(t), max(t)], 'YLim', [0, 130]);
     print2pdf([imgs_folder filename '_yaw'],do_print);
     
-%     % downwash
-%     z_bellow = p{1}(3,:);
-%     z_above = p{2}(3,:);
-%     w = -vd_store{1};
-%     
-%     figure(190);
-%     plot(z_above, w, 'b');
-%     
-%     
+
 %     downwash_3D_vect;
-    figure(4);
-    plot(t, vd_store, 'b');
-    hold off;
-    grid on;
-    xlabel('$$z$$ [m]');
-    legend('Downwash velocity')
-    ylabel('$$Downwash$$ [m/s]');
+    if P.scenario == 6
+        figure(4);
+        plot(t, vd_store, 'b');
+        hold off;
+        grid on;
+        xlabel('$$t$$ [s]');
+        legend('Downwash velocity')
+        ylabel('$$Downwash$$ [m/s]');
+
+        figure(5);
+        plot(p_ref{1}(3,:), vd_store, 'b');
+        hold off;
+        grid on;
+        xlabel('$$z$$ [m]');
+        legend('Downwash velocity')
+        ylabel('$$Downwash$$ [m/s]');
+    end
 
     
     if do_save_workspace
