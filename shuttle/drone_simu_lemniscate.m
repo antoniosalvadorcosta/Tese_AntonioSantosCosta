@@ -8,7 +8,7 @@
 for k = 1:Nsim
     for iD = 1:Param.nD
         
-        
+        % each drone has different controller characteristics
         if iD == 1
             Param.scenario = 2;
         end
@@ -22,8 +22,7 @@ for k = 1:Nsim
             Param.scenario = 5;
         end
             
-            
-            
+          
         % get state vector
         p{iD} = x{iD}(1:3,k);
         v{iD} = x{iD}(4:6,k);
@@ -43,7 +42,6 @@ for k = 1:Nsim
         
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
-        
         
         % nonlinear drone model (continuous time)
         [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);

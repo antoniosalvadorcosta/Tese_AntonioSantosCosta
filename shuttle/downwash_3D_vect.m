@@ -47,7 +47,7 @@ condition = rotor_r ./sqrt(1 + tanh(-k*( height_diff )./h));
 
 vc(condition > dw_radius) = 0;
 
-figure(4);
+figure(7);
 plot(z, vc, 'b');
 hold off;
 grid on;
@@ -59,10 +59,10 @@ ylabel('$$Downwash$$ [m/s]');
 
 %% 3D Vectorial field
 % Define the position of the rotor disk
-disk_center = [1, 1, 5];
+disk_center = [1, 1, 3];
 disk_radius = 0.18;
 
-[X, Y, Z] = meshgrid(0:0.10:3, 0:0.10:3,0:0.25:5);
+[X, Y, Z] = meshgrid(0:0.10:3, 0:0.10:3,0:0.15:3);
 x = reshape(X, [], 1);
 y = reshape(Y, [], 1);
 z = reshape(Z, [], 1);
@@ -94,16 +94,38 @@ theta = linspace(0, 2*pi, 100);
 disk_x = disk_center(1) + disk_radius * cos(theta);
 disk_y = disk_center(2) + disk_radius * sin(theta);
 disk_z = disk_center(3) * ones(size(theta));
-plot3(disk_x, disk_y, disk_z, 'r', 'LineWidth', 2);
+
+
+
+plot3(disk_x, disk_y, disk_z, 'g', 'LineWidth', 0.5);
+
+
+% Define the number of propeller blades
+num_blades = 8;
+
+% Create propeller blades (assuming they are evenly spaced)
+blade_angles = linspace(0, 2*pi, num_blades + 1);
+blade_length = 0.18; % Adjust blade length as needed
+
+for i = 1:num_blades
+    blade_start_x = disk_center(1) + 0.001 * disk_radius * cos(blade_angles(i));
+    blade_start_y = disk_center(2) + 0.001 * disk_radius * sin(blade_angles(i));
+    blade_end_x = blade_start_x + blade_length * cos(blade_angles(i));
+    blade_end_y = blade_start_y + blade_length * sin(blade_angles(i));
+    
+    % Plot each blade
+    plot3([blade_start_x, blade_end_x], [blade_start_y, blade_end_y], [disk_center(3), disk_center(3)], 'g', 'LineWidth', 1);
+end
+
 
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
-title('3D Vector Field of Downwash Speed around Rotor Disk');
+title('3D Vector Field of Downwash Speed Below Rotor Disk');
 grid on;
 axis tight;
 view(30, 30); % Adjust the view angle
-
+hold off;
 
 
 

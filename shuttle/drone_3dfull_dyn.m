@@ -1,4 +1,4 @@
-function [dp,dv,dR,dom] = drone_3dfull_dyn(v,R,om,T,tau,P,iD)
+function [dp,dv,dR,dom, vi] = drone_3dfull_dyn(v,R,om,T,tau,P,iD)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -34,39 +34,19 @@ end
 % Take in consideration every aerodynamic effect (Rotor drag and frame
 % drag)
 if P.scenario > 1
-   
-    p = [0;0;0];
-    vd = 0;
+  
     if T < 0
         disp('Drone unstable!');
         disp(T);
     else
-        if iD == 1
-            vi = sqrt(T/(2*P.air_d*P.A));
-            p1 = p(3,:);
-            p2 = P.d2_height;
-            vd = vi + vi*tanh(-2*(p1 - p2));
-        else
-            vi = sqrt(T/(2*P.air_d*P.A));
-            p2 = p(3,:);
-        end
-    end
-    
-    if iD == 2
-        
-        aux = v-P.Vw-R*[0;0;vi]-vd;
-        v_air = aux(1:3,1);
-        
-    else
-        aux = v-P.Vw-R*[0;0;vi];
-        v_air = aux(1:3,1);
+        vi = sqrt(T/(2*P.air_d*P.A));
     end
     
     
+    aux = v-P.Vw-R*[0;0;vi];
+    v_air = aux(1:3,1);
     
-    
-    
-    
+   
     % rotor drag force
     rotor_drag_force = -R*D*R'*v_air;
     

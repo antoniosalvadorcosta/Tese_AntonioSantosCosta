@@ -65,6 +65,8 @@ nx = 18;
 nu = 4;
 
 % simulations parameters
+tracking_sim = 0;
+situation = 0;
 Param.Vw = [0;0;0];
 rmse_values_wind = [];
 wind_values_x = [[0; 0; 0] ,[2; 0; 0], [5; 0; 0], [10; 0; 0], [15; 0; 0]];
@@ -118,14 +120,14 @@ for i = 1:5
 
 end
 
-disp(rmse_values_wind)
 % Rearrange the matrix into a 4x4 matrix
-rearrangedMatrix = reshape(rmse_values_wind, 4, 4);
+rearrangedMatrix = reshape(rmse_values_wind, [], 4);
 
-tMatrix = rearrangedMatrix';
+rmse_values = round(rearrangedMatrix, 3);
 
-rmse_values_wind = round(tMatrix, 3);
+fprintf('/n/n/n');
 
-% Write the numerical data to Excel spreadsheet using writetable
-writematrix(rmse_values_wind);
-
+fprintf('1 & %f & %f & %f & %f\n',rmse_values(1,1),rmse_values(1,2),rmse_values(1,3),rmse_values(1,4));
+fprintf('2 & %f & %f & %f & %f\n',rmse_values(2,1),rmse_values(2,2),rmse_values(2,3),rmse_values(2,4));
+fprintf('5 & %f & %f & %f & %f\n',rmse_values(3,1),rmse_values(3,2),rmse_values(3,3),rmse_values(3,4));
+fprintf('10 & %f & %f & %f & %f\n',rmse_values(4,1),rmse_values(4,2),rmse_values(4,3),rmse_values(4,4));

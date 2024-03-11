@@ -23,11 +23,12 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-
+Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
 Param.Vw = [0;0;0];
 
+situation = 0;
 %air density
 Param.air_d = 1.225;
 Param.Pa = [0.6 0 0;
@@ -75,6 +76,7 @@ for iD = 1:Param.nD
     tau{iD} = zeros(3,Nsim);
     lbd{iD} = zeros(3,Nsim);
     x{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
+    
     if Param.ref_mode == 2 % circle reference
       phase{iD} = (iD-1)*Param.dphase;
      

@@ -3,6 +3,7 @@
 
 % Summary: simulate simple dynamic system model of a drone
 
+v_i = 0;
 
 % main time loop for simulation
 for k = 1:Nsim
@@ -23,14 +24,14 @@ for k = 1:Nsim
         dpsi_d = dpsi_ref{iD}(:,k);
 
         % mellinger controller
-        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d,iD);
+        [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d,iD, v_i);
         
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
         
         
         % nonlinear drone model (continuous time)
-        [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param, iD);
+        [dot_p,dot_v,dot_R,dot_om, v_i] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param, iD);
         
         % discretization 
         pp = p{iD} + Param.dTi*dot_p;

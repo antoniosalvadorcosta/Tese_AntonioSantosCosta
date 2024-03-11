@@ -48,8 +48,12 @@ Param.d2_height = 3.1;
 %air density
 Param.air_d = 1.225;
 
-%Projected Area
 
+
+Param.arm_lenght = 0.69;
+Param.L = 2*Param.arm_lenght;
+
+%Projected Area
 Param.Pa = [0.6 0 0;
     0 0.6 0;
     0 0 0.5];
@@ -58,7 +62,7 @@ Param.Pa = [0.6 0 0;
 % Param.height = 0.3;
 % Param.Pa = (Param.width * Param.length)/2;
 
-%Area swept by the rotor
+% Rotor disk area 
 Param.rotor_radius = 0.18;
 Param.A = pi*Param.rotor_radius^2;
 
