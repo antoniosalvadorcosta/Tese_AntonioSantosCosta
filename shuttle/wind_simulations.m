@@ -127,7 +127,8 @@ rmse_values = round(rearrangedMatrix, 3);
 
 fprintf('/n/n/n');
 
-fprintf('1 & %f & %f & %f & %f\n',rmse_values(1,1),rmse_values(1,2),rmse_values(1,3),rmse_values(1,4));
-fprintf('2 & %f & %f & %f & %f\n',rmse_values(2,1),rmse_values(2,2),rmse_values(2,3),rmse_values(2,4));
-fprintf('5 & %f & %f & %f & %f\n',rmse_values(3,1),rmse_values(3,2),rmse_values(3,3),rmse_values(3,4));
-fprintf('10 & %f & %f & %f & %f\n',rmse_values(4,1),rmse_values(4,2),rmse_values(4,3),rmse_values(4,4));
+fprintf('(0,0,0) & %f & %f & %f & %f\n',rmse_values(1,1),rmse_values(1,2),rmse_values(1,3),rmse_values(1,4));
+fprintf('(2,2,2) & %f & %f & %f & %f\n',rmse_values(2,1),rmse_values(2,2),rmse_values(2,3),rmse_values(2,4));
+fprintf('(5,5,5) & %f & %f & %f & %f\n',rmse_values(3,1),rmse_values(3,2),rmse_values(3,3),rmse_values(3,4));
+fprintf('(10,0,0) & %f & %f & %f & %f\n',rmse_values(4,1),rmse_values(4,2),rmse_values(4,3),rmse_values(4,4));
+fprintf('(15,0,0) & %f & %f & %f & %f\n',rmse_values(5,1),rmse_values(5,2),rmse_values(5,3),rmse_values(5,4));
