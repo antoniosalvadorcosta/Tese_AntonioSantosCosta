@@ -12,7 +12,7 @@ do_save_workspace = 0; % set to 1 to save workspace to *.mat file
 m = 5;
 rotor_r = 0.18;
 T1 = m * 9.81;
-disk_area = pi*P.rotor_radius^2;
+disk_area = pi*0.18^2;
 L = Param.L;
 
 air_d = 1.225;
@@ -22,13 +22,13 @@ air_d = 1.225;
 T1 = T1/4;
 
 % simulation setup
-z_r = 3;
-x_r = 3;
-y_r = 3;
+z_r = 2.5;
+x_r = 2.5;
+y_r = 2.5;
 
-z = 1:0.001:z_r;
-x = 1:0.001:x_r;
-y = 1:0.001:y_r;
+z = 1:0.01:z_r;
+x = 1:0.01:x_r;
+y = 1:0.01:y_r;
 
 height_diff = z_r - z;
 
@@ -88,11 +88,19 @@ print2pdf([imgs_folder filename '_2D'],do_print);
 
 
 %% 3D Vectorial field
+
+z = 1:0.01:z_r;
+x = 1:0.01:x_r;
+y = 1:0.01:y_r;
+
+p1 = [x_r;y_r;z_r];
+p2 = [x;y;z];
+
 % Define the position of the rotor disk
-disk_center = [2.5, 2.5, 3.0];
+disk_center = [x_r, y_r, z_r];
 disk_radius = 0.18;
 
-[X, Y, Z] = meshgrid(2:0.1:3, 2:0.1:3, 2:0.1:3);
+[X, Y, Z] = meshgrid(1:0.01:x_r, 1:0.01:y_r, 1:0.01:z_r);
 
 x = reshape(X, [], 1);
 y = reshape(Y, [], 1);
@@ -110,7 +118,7 @@ for i = 1:numel(x)
     
     % Check if the point is within the rotor disk
     if radial_dist <= disk_radius
-        w(i) = Vc(i); % Inside the rotor disk
+        w(i) = f_dw3(p1,p2(:,i),T1,Param); % Inside the rotor disk
     else
         w(i) = 0; % Outside the rotor disk (no downwash)
     end

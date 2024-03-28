@@ -1,9 +1,9 @@
-function [dp,dv,dR,dom, vi] = drone_3dfull_dyn_cpte(v,R,om,T,tau,P,iD,dw)
+function [dp,dv,dR,dom, vi] = drone_3dfull_dyn_cpte(p,v,R,om,T,tau,P,other_p, other_T)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
-global vi_d2;
-global pos_d2;
+
+
 
 % auxiliary variables
 zW = [0;0;1];
@@ -42,53 +42,30 @@ end
 % Take in consideration every aerodynamic effect (Rotor drag and frame
 % drag)
 if P.scenario > 1
-    vd = 0;
+    
     if T < 0
         disp('Drone unstable!');
         disp(T);
     else
           vi = sqrt(T/(2*P.air_d*P.A));
-        
-%         % ID = 1
-%         if iD == 1
-%             
-%             % height differenc4e between rotor and a point bellow
-%             height_diff = p(3,:) - pos_d2(3,:);
-%             
-%             % induced velocity
-%             vi = sqrt(T/(2*P.air_d*P.A));
-%             
-%             % radial distance between rotor center and the downwash
-%             % boundary (Momentum theory)
-%             dw_radius = sqrt( (T) / (pi * P.air_d  * vi^2) );
-%             
-%             condition =  P.rotor_radius / sqrt(1 + tanh(-k*( height_diff )/h));
-%             
-%             if dw_radius < condition
-%                 % downwash vertical velocity
-%                 vd = vi + vi*tanh(-k*(height_diff )/h);
-%             else
-%                 vd = 0;
-%             end
-%             
-%             % ID = 2
-%         else
-%             vi = sqrt(T/(2*P.air_d*P.A));
-%             pos_d2 = p;
-%         end
     end
     
-    if iD == 1
-      
-        aux = v-P.Vw-R*[0;0;vi];
-        v_air = aux(1:3,1);
-        
-    else
-        
+    if other_p(3) > p(3)
+        dw = - f_dw3(other_p,p,other_T,P);
         aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
         v_air = aux(1:3,1);
+    else
+        dw = 0;
+        aux = v-P.Vw-R*[0;0;vi];
+        v_air = aux(1:3,1);   
     end
     
+    
+    
+    
+    aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
+    v_air = aux(1:3,1);
+   
     % rotor drag force
     rotor_drag_force = -R*D*R'*v_air;
     

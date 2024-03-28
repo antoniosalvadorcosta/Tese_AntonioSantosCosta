@@ -1,9 +1,7 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
-% inicializations
-
-
+% initializations capture maneouvre
 
 
 % Model and simulation parameters

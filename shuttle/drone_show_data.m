@@ -104,7 +104,7 @@ if tracking_sim == 0
 %         wind_rmse_values_slice = [wind_rmse_values_slice, rmse_value];
 %     end
 
-    rmse_value =  sqrt(mean((e_p ).^2, "all"));
+    rmse_value =  sqrt(mean(vecnorm(e_p).^2));
     fprintf('\nRMSE "%s":\n',scenario_dcrpt);
     fprintf('%f\n',wind_rmse_values_slice);
 
@@ -112,7 +112,7 @@ if tracking_sim == 0
 else
     
     e_p = p{1} - p_ref{1};
-    rmse_value = sqrt(mean(e_p.^2, "all"));
+    rmse_value = sqrt(mean(vecnorm(e_p).^2));
     
     fprintf('\nRMSE "%s":\n',scenario_dcrpt);
     fprintf('%f\n',rmse_value);

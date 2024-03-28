@@ -14,11 +14,15 @@ situation = 0;
 % Minimum height difference
 Param.height_diff = 0.18;
 
-% initialixe both drones (iD = 1 and iD = 2)
+% initialize both drones (iD = 1 and iD = 2)
 drone_init_6;
+
+% flag for controller downwash compensation
+dw_comp = 0;
 
 % simulation script
 drone_main_simul_cpte;
+
 
 % show or not all the plots option
 show_simulations_plots = 1;
