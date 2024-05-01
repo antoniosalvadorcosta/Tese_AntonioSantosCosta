@@ -57,7 +57,7 @@ if P.scenario > 1
         v_air_store = [v_air_store; v_air(3)];
         
         % downwash force
-        F_downwash = 0.5 * P.air_d * 0.36 * dw^2;
+        F_downwash = 0.5 * P.air_d * 0.036 * dw^2;
         downwash_force = [downwash_force; F_downwash];
         
     else
@@ -81,9 +81,9 @@ if P.scenario > 1
 
     %frame_drag = (Cd * A * (v_air).^2)/2; % He, C., Li, Z., & Xie, H. (2012). Investigation of quadrotor aerodynamic characteristics at different flight speeds
     
-    
+    F_downwash = 0;
     dp = v;       % T/P.m*zB
-    dv = -P.g*zW + (T - F_downwash)/P.m*zB + rotor_drag_force - frame_drag;
+    dv = -P.g*zW + (T - F_downwash) / P.m + rotor_drag_force - frame_drag;
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end

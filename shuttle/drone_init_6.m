@@ -5,7 +5,7 @@
 
 
 % Model and simulation parameters
-Param.Tend = 30;
+Param.Tend = 50;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Param.Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
@@ -27,12 +27,12 @@ Param.Vw = [0;0;0];
 
 % M690B drone
 % (guessing parameters! needs identification)
-Param.m = 5;        % drone mass (added board)
+Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0;
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([2,2,2]);
+Param.ki = diag([0.2,0.2,0.4]);
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 % Param.kp = diag([10,10,6]);
@@ -48,7 +48,7 @@ Param.air_d = 1.225;
 
 
 
-Param.arm_lenght = 0.69;
+Param.arm_lenght = 0.33;
 Param.L = 2*Param.arm_lenght;
 
 %Projected Area
@@ -79,7 +79,7 @@ for iD = 1:Param.nD
     Nsim = Param.Nsim;
  
     if iD == 1
-        p0{iD} = [0;3;9.93];
+        p0{iD} = [0;3;exp(0)+Param.d2_height+ Param.height_diff];
         Param.p1 = p0{iD};
     end
     
@@ -119,17 +119,26 @@ for iD = 1:Param.nD
         
         phase{iD} = (iD-1)*Param.dphase;
         
-        p_ref{iD} = [t; 3*ones(size(t)) ;0.03*(t - 15).^2 + Param.d2_height + Param.height_diff];
-        v_ref{iD} = [ones(size(t));zeros(size(t)); 0.06*(t - 15)];
-        a_ref{iD} = [zeros(size(t));zeros(size(t));  0.06*ones(size(t))];
-        j_ref{iD} = [zeros(size(t));zeros(size(t)); zeros(size(t))];
+%         p_ref{iD} = [t; 3*ones(size(t)) ;0.03*(t - 15).^2 + Param.d2_height + Param.height_diff];
+%         v_ref{iD} = [ones(size(t));zeros(size(t)); 0.06*(t - 15)];
+%         a_ref{iD} = [zeros(size(t));zeros(size(t));  0.06*ones(size(t))];
+%         j_ref{iD} = [zeros(size(t));zeros(size(t)); zeros(size(t))];
+%         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
+%         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
+        
+        a = 0.10;
+           
+        p_ref{iD} = [t; 3*ones(size(t)); exp(-a*t) + Param.d2_height + Param.height_diff];
+        v_ref{iD} = [ones(size(t));zeros(size(t)); -a*exp(-a*t)];
+        a_ref{iD} = [zeros(size(t));zeros(size(t));  (a^2)*exp(-a*t)];
+        j_ref{iD} = [zeros(size(t));zeros(size(t)); -(a^3)*exp(-a*t)];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
-        
+
         
     end
     
     p_ref_all{iD} = [p_ref{iD};v_ref{iD};a_ref{iD};j_ref{iD}];
     psi_ref_all{iD} = [psi_ref{iD};dpsi_ref{iD}];
-    
+    fprintf('Finishing initializing trajectory for Drone %d \n', iD);
 end

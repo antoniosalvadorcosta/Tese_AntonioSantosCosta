@@ -9,6 +9,9 @@ function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,d
 %     if ~exist('j_d','var') || isempty(j_d), j_d = zeros(3,1); end
 
 global vd_store;
+global v_air_store;
+
+
 % auxiliary variables
 zW = [0;0;1];
 zB = R(:,3);
@@ -40,23 +43,37 @@ else
     vi = v_i;
 end
 
+dw = 0;
 if dw_on == 1
     if p_above(3) > p(3)
-        dw = - f_dw3(p_above,p,T_above,P);
-        vd_store = [vd_store; dw];
-        aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
-        v_air = aux(1:3,1);
-    else
+        dw = f_dw3(p_above,p,T_above,P);
         
+        aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
+        vd_store = [vd_store; dw];
+        v_air = aux(1:3,1);
+        
+        % downwash force
+        F_downwash = 0.5 * P.air_d * 0.36 * dw^2;
+        
+    else
         aux = v-P.Vw-R*[0;0;vi];
-        v_air = aux(1:3,1);   
+        v_air = aux(1:3,1);
+        F_downwash = 0;
     end
+    
 else
-    disp('sss');
-   
+    if p_above(3) > p(3)
+        dw = f_dw3(p_above,p,T_above,P);
+        vd_store = [vd_store; dw];
+        F_downwash = 0;
+    end    
     aux = v-P.Vw-R*[0;0;vi];
     v_air = aux(1:3,1);
+    F_downwash = 0;
+  
 end
+
+
 
 
 rotor_drag_force = -R*D*R'*v_air;
@@ -67,7 +84,7 @@ Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
 frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
 %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation
 
-f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag + [0;0;F_downwash]; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
 
 
 % compute thrust

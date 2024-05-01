@@ -1,6 +1,6 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
-function [T,tau,e_p,dw] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d, v_i,dw_on, p_above, T_above)
+function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d, v_i,dw_on, p_above, T_above)
 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
@@ -8,6 +8,8 @@ function [T,tau,e_p,dw] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_
 %     if ~exist('a_d','var') || isempty(a_d), a_d = zeros(3,1); end
 %     if ~exist('j_d','var') || isempty(j_d), j_d = zeros(3,1); end
 
+global vd_store;
+global v_air_store;
 
 % auxiliary variables
 zW = [0;0;1];
@@ -40,16 +42,29 @@ else
     vi = v_i;
 end
 
+
 if dw_on == 1
     if p_above(3) > p(3)
-    dw = - f_dw3(p_above,p,T_above,P);
-    aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
-    v_air = aux(1:3,1);
+        dw = f_dw3(p_above,p,T_above,P);
+        vd_store = [vd_store; ];
+        aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
+        v_air = aux(1:3,1);
+        
+    else
+        aux = v-P.Vw-R*[0;0;vi];
+        v_air = aux(1:3,1);
+    end
 else
-    dw = 0;
+    if p_above(3) > p(3)
+        dw = f_dw3(p_above,p,T_above,P);
+        vd_store = [vd_store; dw];
+
+    end    
     aux = v-P.Vw-R*[0;0;vi];
     v_air = aux(1:3,1);
+    
 end
+
 
 
 rotor_drag_force = -R*D*R'*v_air;

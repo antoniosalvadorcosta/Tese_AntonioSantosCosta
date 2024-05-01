@@ -5,7 +5,11 @@
 
 % Initialize arrays and variables for downwash values
 global vd_store;
+global v_air_store;
+global downwash_force;
 
+downwash_force = [0;0];
+v_air_store = [0;0];
 vd_store = [0;0];
 dw = 0;
 tracking_sim = 0;
@@ -55,8 +59,7 @@ for k = 1:Param.Nsim
         % nonlinear drone model (continuous time)
         [dot_p,dot_v,dot_R,dot_om, vi] = drone_3dfull_dyn_cpte(p{iD},v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param,other_pos{iD},other_thrust{iD});
         
-       
-  
+    
         % discretization 
         pp = p{iD} + Param.dTi*dot_p; 
         vp = v{iD} + Param.dTi*dot_v;

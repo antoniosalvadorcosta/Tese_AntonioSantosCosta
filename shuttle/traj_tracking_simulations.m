@@ -54,7 +54,7 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.kom= diag([1,1,1]);
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([2,2,2]);
+Param.ki = diag([2,2,2])*0;
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 

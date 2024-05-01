@@ -9,17 +9,17 @@ do_print = 1; % set to 1 to plot each plot in a PDF file (for latex reports)
 do_save_workspace = 0; % set to 1 to save workspace to *.mat file
 
 % drones' characteristics
-m = 5;
+m = 0.6;
 rotor_r = 0.18;
 T1 = m * 9.81;
-disk_area = pi*0.18^2;
-L = Param.L;
+disk_area = pi*0.10^2;
+L = 0.30;
 
 air_d = 1.225;
 
 
 % thrust per rotor disk
-T1 = T1/4;
+%T1 = T1/4;
 
 % simulation setup
 z_r = 2.5;
@@ -33,8 +33,8 @@ y = 1:0.01:y_r;
 height_diff = z_r - z;
 
 % Downwash shapping parameters
-Cax = 0.2;                
-Crad = 0.5;    
+Cax = 0.04;                
+Crad = 0.24;    
 
 Vc = [];
 
@@ -88,48 +88,49 @@ print2pdf([imgs_folder filename '_2D'],do_print);
 
 
 %% 3D Vectorial field
+z_r = 2.5;
+x_r = 2.5;
+y_r = 2.5;
 
-z = 1:0.01:z_r;
-x = 1:0.01:x_r;
-y = 1:0.01:y_r;
 
 p1 = [x_r;y_r;z_r];
-p2 = [x;y;z];
 
 % Define the position of the rotor disk
 disk_center = [x_r, y_r, z_r];
 disk_radius = 0.18;
 
-[X, Y, Z] = meshgrid(1:0.01:x_r, 1:0.01:y_r, 1:0.01:z_r);
-
-x = reshape(X, [], 1);
-y = reshape(Y, [], 1);
-z = reshape(Z, [], 1);
+% Create a grid of points in 3D space
+x_vals = x_r - 1:0.05:x_r + 1;
+y_vals = y_r - 1:0.05:y_r + 1;
+z_vals = z_r - 1:0.025:z_r;
+[X, Y, Z] = meshgrid(x_vals, y_vals, z_vals);
 
 % Initialize arrays for velocity components
-u = zeros(size(x));
-v = zeros(size(y));
-w = zeros(size(z));
+u = zeros(size(X));
+v = zeros(size(Y));
+w = zeros(size(Z));
 
 % Compute the velocity field based on the downwash vector at each point
-for i = 1:numel(x)
-    % Calculate the radial distance from the rotor disk center
-    radial_dist = sqrt((x(i) - disk_center(1))^2 + (y(i) - disk_center(2))^2);
-    
-    % Check if the point is within the rotor disk
-    if radial_dist <= disk_radius
-        w(i) = f_dw3(p1,p2(:,i),T1,Param); % Inside the rotor disk
-    else
-        w(i) = 0; % Outside the rotor disk (no downwash)
+for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+        for k = 1:size(X, 3)
+            % Calculate the radial distance from the rotor disk center
+            radial_dist = sqrt((disk_center(1)-X(i, j, k))^2 + (disk_center(2)-Y(i, j, k))^2);
+            
+            % Check if the point is within the rotor disk
+            if radial_dist <= disk_radius
+                w(i, j, k) = f_dw3(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
+            else
+                w(i, j, k) = 0;
+            end
+        end
     end
 end
 
 % Visualize the vector field
-figure;
-quiver3(x, y, z, zeros(size(u)), zeros(size(v)), w, 'b');
+figure(8);
+quiver3(X, Y, Z, zeros(size(u)), zeros(size(v)), -w, 'b');
 hold on;
-
-
 
 % Plot the rotor disk (a circle in 3D space)
 theta = linspace(0, 2*pi, 100);
@@ -140,7 +141,7 @@ plot3(disk_x, disk_y, disk_z, 'g', 'LineWidth', 2);
 
 
 % Define the number of propeller blades
-num_blades = 8;
+num_blades = 2;
 
 % Create propeller blades (assuming they are evenly spaced)
 blade_angles = linspace(0, 2*pi, num_blades + 1);

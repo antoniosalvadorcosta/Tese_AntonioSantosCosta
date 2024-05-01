@@ -5,6 +5,11 @@
 
 P = Param;
 
+
+global vd_store;
+global downwash_force;
+global v_air_store;
+
 if P.scenario == 1
     imgs_folder = 'figures/mellinger/sc1_';
 end
@@ -95,7 +100,7 @@ end
 % calculate and display rmse value
 
 % wind simulations
-if tracking_sim == 0
+if tracking_sim == 0 && P.scenario ~= 6
     wind_rmse_values_slice = [];
     e_p = p{1} - p_ref{1};
 %     for i = 1:3
@@ -110,17 +115,27 @@ if tracking_sim == 0
 
 % other simulations    
 else
-    
-    e_p = p{1} - p_ref{1};
-    rmse_value = sqrt(mean(vecnorm(e_p).^2));
-    
-    fprintf('\nRMSE "%s":\n',scenario_dcrpt);
-    fprintf('%f\n',rmse_value);
+
+    if P.scenario == 6
+        e_p = p{2} - p_ref{2};
+        z_ep = e_p(3,:);
+        medium_error_z = mean(z_ep);
+        fprintf('\nError in z (mean) "%s": ',scenario_dcrpt);
+        fprintf('%f\n',medium_error_z);
+    else
+        e_p = p{1} - p_ref{1};
+        rmse_value = sqrt(mean(vecnorm(e_p).^2));
    
+
+        fprintf('\nRMSE "%s": ',scenario_dcrpt);
+        fprintf('%f\n',rmse_value);
+    
+    end
+    
+    
+    
+      
 end
-
-
-
 
 if show_simulations_plots ~= 0
     
@@ -495,7 +510,7 @@ if show_simulations_plots ~= 0
     print2pdf([imgs_folder filename '_yaw'],do_print);
     
 
-%     downwash_3D_vect;
+   % downwash_3D_vect;
     if P.scenario == 6
         figure(4);
         plot(t, vd_store, 'b');
@@ -504,15 +519,33 @@ if show_simulations_plots ~= 0
         xlabel('$$t$$ [s]');
         legend('Downwash velocity')
         ylabel('$$Downwash$$ [m/s]');
-
+        
         figure(5);
-        plot(p_ref{1}(3,:), vd_store, 'b');
+        plot(t, downwash_force, 'b');
         hold off;
         grid on;
-        xlabel('$$z$$ [m]');
-        legend('Downwash velocity')
-        ylabel('$$Downwash$$ [m/s]');
-    end
+        xlabel('$$t$$ [s]');
+        legend('Downwash force')
+        ylabel('$$Downwash$$ [N/m]');
+        
+        
+%         
+%         figure(5);
+%         plot(t, v_air_store, 'b');
+%         hold off;
+%         grid on;
+%         xlabel('$$z$$ [m]');
+%         legend('Relative air velocity')
+%         ylabel('$$V_air$$ [m/s]');
+%         
+%         figure(5);
+%         plot(p_ref{1}(3,:), vd_store, 'b');
+%         hold off;
+%         grid on;
+%         xlabel('$$z$$ [m]');
+%         legend('Downwash velocity')
+%         ylabel('$$Downwash$$ [m/s]');
+     end
 
     
     if do_save_workspace
