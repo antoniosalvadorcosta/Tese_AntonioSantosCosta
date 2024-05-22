@@ -6,36 +6,34 @@
 
 clear all;
 
-%----------------------------- height difference below 2 rotor radius
+ set(0,'defaultTextInterpreter','latex');
+    set(0,'defaultLegendInterpreter','latex');
+    sstblue         = [0,128,255]/255;
+    sstlightblue    = [48,208,216]/255;
+    sstlighterblue  = [50,220,240]/255;
+    sstlightestblue = [60,230,255]/255;
+    sstgreen        = [43,191,92]/255;
+    sstlightgreen   = [140,255,200]/255;
+    sstlightergreen = [160,255,225]/255;
+    sstgray         = [70,70,70]/255;
+    sstlightgray    = [200,200,200]/255;
+    sstred          = [255, 0, 0]/255;  % Vivid red
+    sstbrown        = [165, 42, 42]/255; % Medium brown
+    sstgray         = [70,70,70]/255;
+    yellow          = [187, 139, 25]/255;
+    %dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+    
+    dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 
-% % situation of the simulation of the 4 drones in drone_show_data (in this case should be 0);
-% situation = 0;
-% 
-% % Minimum height difference
-% Param.height_diff = 0.18;
-% 
-% % initialize both drones (iD = 1 and iD = 2)
-% drone_init_6;
-% 
-% % flag for controller downwash compensation
-% dw_comp = 1;
-% 
-% % simulation script
-% drone_main_simul_cpte;
-% 
-% 
-% % show or not all the plots option
-% show_simulations_plots = 1;
-% 
-% % show simulations script
-% drone_show_data;
+
 
 %----------------------------- height difference above 2 rotor radius
-clear all;
+
 % situation of the simulation of the 4 drones in drone_show_data (in this case should be 0);
 situation = 0;
 
-Param.height_diff = 0.18;
+% drones safety distance
+Param.height_diff = 0.60;
 
 drone_init_6;
 
@@ -48,3 +46,15 @@ show_simulations_plots = 1;
 
 drone_show_data;
 
+% 
+% dcolors = { sstred,sstgreen, sstgreen  , sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% 
+% 
+% % flag for controller downwash compensation
+% dw_comp = 0;
+% 
+% drone_main_simul_cpte;
+% 
+% show_simulations_plots = 1;
+% 
+% drone_show_data;

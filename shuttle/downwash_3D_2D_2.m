@@ -13,21 +13,17 @@ Param.k = 0.8;                % between 0 and 1
 Param.h = 2*P.rotor_radius;          % in the range of rotor diameter or slightly larger
 
 
-Param.Vw = [0;0;0];
 % drones' characteristics
 m = 4;
 rotor_r = 0.18;
 T1 = m * 9.81;
-disk_area = pi*rotor_r^2;
-arm_length = 0.33;
-L = arm_length * 2;
-v1 = [0;0;0];
+disk_area = pi*0.18^2;
+L = 0.30;
+
 air_d = 1.225;
 
 CT = 0.1;
 
-Param.Cax = 0.4;                
-Param.Crad = 1.2;  
 
 % thrust after applying thrust coeficient
 %T1 = T1*CT;
@@ -50,27 +46,14 @@ Vc = [];
 p1 = [x_r;y_r;z_r];
 p2 = [x;y;z];
 
-arrived = 0;
-% Define the minimum distance for smooth transition (e.g., 10 cm)
-min_distance = 0.10; % meters
+
 
 for i = 1:numel(x)
-    aux  = height_diff(i);
     
-    if aux > min_distance
        
-        vc = f_dw3_0(p1,p2(:,i),T1,v1, Param); 
-    else
-        if abs(aux - min_distance) < 1e-1 && arrived == 0
-            arrived = 1;
-            vc = f_dw3_0(p1,p2(:,i), T1, v1, Param);
-            Vc_zenit = vc;
-        end
-        if aux < min_distance
-        
-            vc = Vc_zenit;
-        end
-    end 
+    vc = f_dw2_1(p1,p2(:,i), T1, Param);
+          
+    
     Vc = [Vc;vc]; 
 end
 
@@ -128,14 +111,14 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
                       
-            w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1, Param);
+            w(i, j, k) = f_dw2(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
             
         end
     end
 end
 
 % eliminate negligible values of downwash
-nv = 0.01;
+nv = 0;
 w(w<nv) = 0;
 
 % Visualize the vector field
@@ -170,7 +153,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
             
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1,Param);
+                w(i, j, k) = f_dw2(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
             
         end
     end
@@ -209,7 +192,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
            
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1,v1, Param);
+                w(i, j, k) = f_dw2(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
           
         end
     end
@@ -248,7 +231,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
             
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1, Param);
+                w(i, j, k) = f_dw2(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
             
         end
     end

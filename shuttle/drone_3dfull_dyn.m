@@ -1,4 +1,4 @@
-function [dp,dv,dR,dom, vi] = drone_3dfull_dyn(v,R,om,T,tau,P,iD)
+function [dp,dv,dR,dom, v_air] = drone_3dfull_dyn(v,R,om,T,tau,P)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -39,26 +39,30 @@ if P.scenario > 1
         disp('Drone unstable!');
         disp(T);
     else
-        vi = sqrt(T/(2*P.air_d*P.A));
+        vi = 0;
+        v_air = v-P.Vw;
+
     end
     
-    
-    aux = v-P.Vw-R*[0;0;vi];
-    v_air = aux(1:3,1);
+   
+   
     
    
     % rotor drag force
-    rotor_drag_force = -R*D*R'*v_air;
+    rotor_drag_force = R*D*R'*v_air;
     
     % Body drag coeficient and force
-    Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
-    %Cd = 0.0346 * A .* (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
     
-    %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation of quadrotor aerodynamic characteristics at different flight speeds
-    frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
+    %Cd = 1.18; % Aerodynamics aeronautics and flight mechanics
+    Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
+    %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
+    
+    frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
+  
+    %frame_drag = (1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
     
     dp = v;       % T/P.m*zB
-    dv = -P.g*zW + T/P.m*zB + rotor_drag_force - frame_drag;
+    dv = -P.g*zW + T/P.m*zB - rotor_drag_force - frame_drag;
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end

@@ -1,6 +1,6 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
-function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d, v_i,dw_on, p_above, T_above)
+function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,dw_on, p_above, T_above, v_above)
 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
@@ -36,59 +36,74 @@ e_v = v - v_d;
 T = 0;
 vi = 0;
 
-if T < 0
-    disp('Drone unstable!');
-    disp(T);
-else
-    vi = v_i;
-end
-
+b = 3.7*10^-7;
 dw = 0;
+
+ % if the compensation for the downwash is activated
 if dw_on == 1
-    if p_above(3) > p(3)
-        dw = f_dw3(p_above,p,T_above,P);
-        
-        aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
-        vd_store = [vd_store; dw];
-        v_air = aux(1:3,1);
-        
-        % downwash force
-        F_downwash = 0.5 * P.air_d * 0.36 * dw^2;
-        
-    else
-        aux = v-P.Vw-R*[0;0;vi];
-        v_air = aux(1:3,1);
-        F_downwash = 0;
-    end
     
-else
+    % if the other drone at higher altitude
     if p_above(3) > p(3)
-        dw = f_dw3(p_above,p,T_above,P);
+        
+        
+        dw =  f_dw3_0(p_above,p,T_above,v_above,P);
+        v_air_drone_below = v - P.Vw - [0;0;dw];
+   
         vd_store = [vd_store; dw];
-        F_downwash = 0;
-    end    
-    aux = v-P.Vw-R*[0;0;vi];
-    v_air = aux(1:3,1);
-    F_downwash = 0;
+        
+        
+%         cf = 0.00001;
+%         
+%         cf2 = (cf - b*dw)/dw;
+% 
+%         rotor_speed = sqrt(T_above/cf);
+%         
+%         old_T = cf*rotor_speed^2;
+%         
+%         new_T = cf2*dw*rotor_speed^2;
+%        
+%         f_change = -b*dw*rotor_speed^2;
+% %         
+%         a = f_change;
+    else
+       aux = v-P.Vw;
+       v_air_drone_below = aux(1:3,1); 
+      
+      
+    
+    end
+
+% no compensation for the downwash
+else
+    % the other drone is above, still store the downwash values
+    if p_above(3) > p(3)
+        
+        dw =  f_dw3_0(p_above,p,T_above,v_above,P);
+        vd_store = [vd_store; dw];
+       
+    end
+    a = 0;
+    aux = v-P.Vw;
+    v_air_drone_below = aux(1:3,1);
   
 end
 
 
+v_air = v_air_drone_below;
 
-
-rotor_drag_force = -R*D*R'*v_air;
+rotor_drag_force = R*D*R'*v_air;
 
 Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
 %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
 
-frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
+frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
 %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation
 
-f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag + [0;0;F_downwash]; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force - frame_drag ; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
 
 
 % compute thrust
-if P.scenario >= 4
+if P.scenario >= 4 
     T= f_dr'*zB; % kh*(v'*(R(:,1)+R(:,2)))^2;
 else
     T = f_d'*zB;

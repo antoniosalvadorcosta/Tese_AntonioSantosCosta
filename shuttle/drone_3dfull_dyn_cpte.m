@@ -1,8 +1,7 @@
-function [dp,dv,dR,dom, vi] = drone_3dfull_dyn_cpte(p,v,R,om,T,tau,P,other_p, other_T)
+function [dp,dv,dR,dom] = drone_3dfull_dyn_cpte(p,v,R,om,T,tau,F,P,other_p, other_T, other_v)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
-global downwash_force;
 global v_air_store;
 
 % auxiliary variables
@@ -16,11 +15,8 @@ A = P.Pa;
 z_drone_bellow = 0;
 vw = P.Vw;
 kh = 0.09;
+b = 3.7 * 10 ^ - 7;
 
-
-% downwash parameters
-k = P.d_k;
-h = P.d_h;
 
 % rotor drag coeficient
 dx = 0.50;
@@ -28,7 +24,8 @@ dy = 0.39;
 dz = 0.11;
 D = diag ([dx, dy, dz]);
 
-c = T/P.m + 0.09*(v'*(R(:,1)+R(:,2))).^2;
+
+
 
 % equations of motion
 if P.scenario <= 1
@@ -44,46 +41,61 @@ end
 if P.scenario > 1
     
     if T < 0  
-        disp('Drone unstable!');
+        disp('Drone unstable (model)!');
         disp(T);
     else
           vi = sqrt(T/(2*P.air_d*P.A));
     end
     
     if other_p(3) > p(3)
-        dw =  f_dw3(other_p,p,other_T,P);
-        aux = v-P.Vw-R*[0;0;vi]-[0;0;dw];
-        v_air = aux(1:3,1);
+        
+        
+        dw =  f_dw3_0(other_p,p,other_T, other_v,P);
+        
+        v_air_0 = v- P.Vw;
+        v_air = v- P.Vw - [0;0;dw];
+        
         v_air_store = [v_air_store; v_air(3)];
+       
+        % Drone below induced velocity in hovering
+        vh = sqrt(T/(2*P.air_d*P.rotor_radius^2*pi));
+
+        vi = 0;
+        % Drone below induced velocity
+        vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
         
-        % downwash force
-        F_downwash = 0.5 * P.air_d * 0.36 * dw^2;
-        downwash_force = [downwash_force; F_downwash];
         
+     
+%         cf = 0.00001;
+%         
+%         cf2 = (cf - b*dw)/dw;
+%         
+%         
+%         rotor_speed = sqrt(T/cf);
+%         
+%         old_T = cf*rotor_speed^2;
+%         
+%         new_T = cf2*dw*rotor_speed^2;
+%        
+%         f_change = -b * dw * rotor_speed^2;
+%         
     else
-        F_downwash = 0;
-        aux = v-P.Vw-R*[0;0;vi];
+        f_change  = 0;
+        aux = v-P.Vw;
         v_air = aux(1:3,1);
     end
-    
-    
-    
     
     % rotor drag force
     rotor_drag_force = -R*D*R'*v_air;
     
     % Body drag coeficient and force
-  
     Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
-    %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
-
-    frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
-
-    %frame_drag = (Cd * A * (v_air).^2)/2; % He, C., Li, Z., & Xie, H. (2012). Investigation of quadrotor aerodynamic characteristics at different flight speeds
-    
-    
-    dp = v;       % T/P.m*zB
-    dv = -P.g*zW + (T - F_downwash)/P.m*zB + rotor_drag_force - frame_drag;
+                                                
+    frame_drag_force = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
+    total_disturb_force =0 ;
+   
+    dp = v;      
+    dv = -P.g*zW + (T/P.m)*zB - rotor_drag_force - frame_drag_force; 
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end

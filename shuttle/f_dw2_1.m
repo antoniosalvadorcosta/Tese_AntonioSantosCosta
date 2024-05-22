@@ -1,15 +1,21 @@
-function Vc = f_dw2(p1,p2, T1, P)
+function [Vc,vi] = f_dw2_1(p1,p2, T1, v_air, P)
 
 
 % downwash shapping parameters sugested by Gemini
-k = 0.4;                % between 0 and 1
-h = 0.10;          % in the range of rotor diameter or slightly larger
+k = 0.1;                % between 0 and 1
+h = 0.3;          % in the range of rotor diameter or slightly larger
 disk_area = pi*P.rotor_radius^2;
 
 height_diff = p1(3)-p2(3);
 
-% Drone 1 induced velcoity
-vi = sqrt(T1/(2*P.air_d*disk_area));
+
+% Drone 1 induced velocity in hovering
+vh = sqrt(T1/(2*P.air_d*disk_area));
+
+vi = 0;
+% Drone 1 induced velocity
+vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
+
 
 % Drone 1 downwash velocity
 vc = vi  + vi*tanh(-k*(height_diff)/h);

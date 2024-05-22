@@ -29,7 +29,7 @@ function handle = drone_plot(pos,lbd,handle,dcolor)
 %     scale = 1;   % iris
 %     scale = 0.3; % crazyflie
     arm_colors = [ [70,70,70]/255;
-                   [200,200,200]/255 ];
+                   [90,90,90]/255 ];
         
     rot = Euler2R(lbd)*internal_rot_axis;
     pos = pos';
@@ -80,7 +80,7 @@ function handles = draw_square_arm(rot,pos,esc,drot,dpos,arm_colors,handles,idx,
     % arm modeling
     side = 0.005;
     len_ini = 0.0;%7*cos(pi/4);
-    len_end = 0.2;            
+    len_end = 0.25;            
     raw_pts = [ len_ini     0       0
                 len_end     0       0   ];
     pts_arm = ( (rot*( (drot*(raw_pts*esc)')' + ...

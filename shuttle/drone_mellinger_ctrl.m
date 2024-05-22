@@ -1,6 +1,6 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
-function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD,v_i)
+function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD,v_air)
 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
@@ -33,55 +33,31 @@ e_v = v - v_d;
 T = 0;
 
 
-if P.scenario == 6
-    
+
+if P.scenario > 3 && P.scenario < 6 || P.scenario == 7
     if T < 0
         disp('Drone unstable!');
         disp(T);
-    else
-        vi = v_i;
-        
+    
+    end
+   
+    
+    frame_drag = 0;
+    rotor_drag_force = R*D*R'*v_air;
+    
+    if P.scenario >= 5
+        Cd = 0.03 * A / (P.m^0.5);
+      
+        frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
+     
+        %frame_drag =(1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
     end
     
-    
-    aux = v-P.Vw-R*[0;0;vi];
-    v_air = aux(1:3,1);
-    
-    rotor_drag_force = -R*D*R'*v_air;
-    
-    Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
-    %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
-    
-    frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air).^2;%.*sign(aux(1:3,1));
-    %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation
-    
-    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
-    
+    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + rotor_drag_force + frame_drag;
 else
-    
-    if P.scenario > 3 && P.scenario < 6
-        if T < 0
-            disp('Drone unstable!');
-            disp(T);
-        else
-            vi = sqrt(T/(2*P.air_d*P.A));
-        end
-        aux = v-P.Vw-R*[0;0;vi];
-        v_air = aux(1:3,1);
-        
-        frame_drag = 0;
-        rotor_drag_force = -R*D*R'*v_air;
-        
-        if P.scenario >= 5
-            Cd = 0.03 * A / (P.m^0.5);
-            frame_drag = R*(1/2)*P.air_d*Cd.*A*(R'*v_air.^2);
-        end
-        
-        f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force + frame_drag;
-    else
-        f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
-    end
+    f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
 end
+
 
 
 % compute thrust
