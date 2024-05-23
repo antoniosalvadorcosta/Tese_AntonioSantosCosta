@@ -52,7 +52,7 @@ p2 = [x;y;z];
 
 arrived = 0;
 % Define the minimum distance for smooth transition (e.g., 10 cm)
-min_distance = 0.10; % meters
+min_distance = 1.5 * rotor_r; % between one or two rotor radius -> steady state
 
 for i = 1:numel(x)
     aux  = height_diff(i);

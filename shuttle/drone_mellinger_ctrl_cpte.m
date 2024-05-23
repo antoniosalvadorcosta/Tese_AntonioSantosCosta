@@ -9,7 +9,7 @@ function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,d
 %     if ~exist('j_d','var') || isempty(j_d), j_d = zeros(3,1); end
 
 global vd_store;
-global v_air_store;
+
 
 
 % auxiliary variables
@@ -50,21 +50,7 @@ if dw_on == 1
         v_air_drone_below = v - P.Vw - [0;0;dw];
    
         vd_store = [vd_store; dw];
-        
-        
-%         cf = 0.00001;
-%         
-%         cf2 = (cf - b*dw)/dw;
-% 
-%         rotor_speed = sqrt(T_above/cf);
-%         
-%         old_T = cf*rotor_speed^2;
-%         
-%         new_T = cf2*dw*rotor_speed^2;
-%        
-%         f_change = -b*dw*rotor_speed^2;
-% %         
-%         a = f_change;
+
     else
        aux = v-P.Vw;
        v_air_drone_below = aux(1:3,1); 
@@ -82,7 +68,7 @@ else
         vd_store = [vd_store; dw];
        
     end
-    a = 0;
+    
     aux = v-P.Vw;
     v_air_drone_below = aux(1:3,1);
   

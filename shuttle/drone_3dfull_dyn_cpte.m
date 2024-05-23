@@ -64,29 +64,15 @@ if P.scenario > 1
         % Drone below induced velocity
         vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
         
-        
-     
-%         cf = 0.00001;
-%         
-%         cf2 = (cf - b*dw)/dw;
-%         
-%         
-%         rotor_speed = sqrt(T/cf);
-%         
-%         old_T = cf*rotor_speed^2;
-%         
-%         new_T = cf2*dw*rotor_speed^2;
-%        
-%         f_change = -b * dw * rotor_speed^2;
-%         
+      
     else
-        f_change  = 0;
+       
         aux = v-P.Vw;
         v_air = aux(1:3,1);
     end
     
     % rotor drag force
-    rotor_drag_force = -R*D*R'*v_air;
+    rotor_drag_force = R*D*R'*v_air;
     
     % Body drag coeficient and force
     Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
@@ -95,7 +81,7 @@ if P.scenario > 1
     total_disturb_force =0 ;
    
     dp = v;      
-    dv = -P.g*zW + (T/P.m)*zB - rotor_drag_force - frame_drag_force; 
+    dv = -P.g*zW + (T/P.m)*zB + rotor_drag_force + frame_drag_force; 
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end

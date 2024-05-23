@@ -53,7 +53,7 @@ if P.scenario > 3 && P.scenario < 6 || P.scenario == 7
         %frame_drag =(1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
     end
     
-    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + rotor_drag_force + frame_drag;
+    f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force - frame_drag;
 else
     f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
 end
