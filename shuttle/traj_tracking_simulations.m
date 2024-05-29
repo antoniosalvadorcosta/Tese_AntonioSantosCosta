@@ -121,7 +121,7 @@ rearrangedMatrix = reshape(rmse_values, 4, 4);
 
 rmse_values = round(rearrangedMatrix, 3);
 
-fprintf('/n/n/n');
+fprintf('\n\n\n ');
 
 fprintf('1 & %f & %f & %f & %f\n',rmse_values(1,1),rmse_values(1,2),rmse_values(1,3),rmse_values(1,4));
 fprintf('2 & %f & %f & %f & %f\n',rmse_values(2,1),rmse_values(2,2),rmse_values(2,3),rmse_values(2,4));

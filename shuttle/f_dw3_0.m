@@ -15,14 +15,19 @@ v_air = v1 - P.Vw;
 vh = sqrt(T1/(2*P.air_d*disk_area));
 
 vi = 0;
-% Drone above induced velocity
-vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
+% % Drone above induced velocity
+% if v_air(3) < 0 || v_air(3) == 2*norm(vh)
+%     vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
+% 
+% else
+%     vi = vh;
+% end
+% 
+% if all(v1 == [0; 0; 0]) && all(P.Vw == [0; 0; 0])
+%     vi = vh;
+% end
 
-if all(v1 == [0; 0; 0]) && all(P.Vw == [0; 0; 0])
-    vi = vh;
-end
-
-
+vi = vh;
 
 % Vmax around centerline
 v_max = vi* (P.Cax * P.L/(axial_diff));

@@ -5,7 +5,7 @@
 
 
 % Model and simulation parameters
-Param.Tend = 30;
+Param.Tend = 60;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Param.Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
@@ -23,7 +23,7 @@ Param.Rad = 5;        % radius of circle
 Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = [0.2;0.2;0.2];
+Param.Vw = [0;0;0];
 
 % M690B drone
 % (guessing parameters! needs identification)
@@ -41,17 +41,17 @@ Param.kom= diag([1,1,1]);
 % Param.kR = diag([20,20,20]);
 % Param.kom= diag([0.2,0.2,0.2]);
 
-Param.d2_height = 3.0;
+Param.d2_height = 2.0;
 
 %air density
 Param.air_d = 1.225;
 Param.arm_lenght = 0.33;
-Param.L = 2*Param.arm_lenght;
+Param.L = 0.799;
 
 %Projected Area
-Param.Pa = [0.6 0 0;
-    0 0.6 0;
-    0 0 0.5];
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
 % Param.width = 0.6;
 % Param.length = 0.6;
 % Param.height = 0.3;
@@ -63,7 +63,7 @@ Param.A = pi*Param.rotor_radius^2;
 
 % downwash
 Param.Cax = 0.1;
-Param.Crad = 0.5;
+Param.Crad = 1.5;
 
 Param.k = 0.6;                  % between 0 and 1
 Param.h = 2*Param.rotor_radius; % rotor diameter or slightly larger
@@ -79,12 +79,12 @@ for iD = 1:Param.nD
     
     if iD == 1
         % p0{iD} = [0;3;0.10*(0-15)^2+Param.d2_height+ Param.height_diff];
-         p0{iD} = [0;3;exp(0)+Param.d2_height+ Param.height_diff]
+         p0{iD} = [0;3;7*exp(0)+Param.d2_height+ Param.height_diff];
         Param.p1 = p0{iD};
     end
     
     if iD == 2
-        p0{iD} = [0;3;3];
+        p0{iD} = [0;3;Param.d2_height];
         Param.p2 = p0{iD};
     end
     
@@ -104,7 +104,7 @@ for iD = 1:Param.nD
     if iD == 2 % linear for drone 2
         
         phase{iD} = (iD-1)*Param.dphase;
-        p_ref{iD} = [t;3*ones(size(t));3*ones(size(t))];
+        p_ref{iD} = [t;3*ones(size(t));Param.d2_height*ones(size(t))];
         v_ref{iD} = [ones(size(t));zeros(size(t));zeros(size(t))];
         a_ref{iD} = [zeros(size(t));zeros(size(t));zeros(size(t))];
         j_ref{iD} = [zeros(size(t));zeros(size(t));zeros(size(t))];
@@ -116,12 +116,14 @@ for iD = 1:Param.nD
     if iD == 1 % descendant trajectory
         
         
-
         a = 0.10;
-        p_ref{iD} = [t; 3*ones(size(t)); exp(-a*t) + Param.d2_height + Param.height_diff ];
-        v_ref{iD} = [ones(size(t));zeros(size(t)); -a*exp(-a*t)];
-        a_ref{iD} = [zeros(size(t));zeros(size(t));  (a^2)*exp(-a*t)];
-        j_ref{iD} = [zeros(size(t));zeros(size(t)); -(a^3)*exp(-a*t)];
+        f = 7 * exp(-a*t);
+
+        a = 0.30;
+        p_ref{iD} = [t; 3*ones(size(t)); f + Param.d2_height + Param.height_diff ];
+        v_ref{iD} = [ones(size(t));zeros(size(t)); -a*7*exp(-a*t)];
+        a_ref{iD} = [zeros(size(t));zeros(size(t));  49*a^2*exp(-a*t) ];
+        j_ref{iD} = [zeros(size(t));zeros(size(t));  -343*a^3*exp(-a*t)];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
 

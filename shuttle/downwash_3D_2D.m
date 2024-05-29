@@ -19,15 +19,15 @@ m = 4;
 rotor_r = 0.18;
 T1 = m * 9.81;
 disk_area = pi*rotor_r^2;
-arm_length = 0.33;
+arm_length = 0.395;
 L = arm_length * 2;
 v1 = [0;0;0];
 air_d = 1.225;
 
 CT = 0.1;
 
-Param.Cax = 0.4;                
-Param.Crad = 1.2;  
+Param.Cax = 0.1;                
+Param.Crad =1.5;  
 
 % thrust after applying thrust coeficient
 %T1 = T1*CT;
@@ -51,8 +51,8 @@ p1 = [x_r;y_r;z_r];
 p2 = [x;y;z];
 
 arrived = 0;
-% Define the minimum distance for smooth transition (e.g., 10 cm)
-min_distance = 1.5 * rotor_r; % between one or two rotor radius -> steady state
+% Define the minimum distance for smooth transition
+min_distance =  0.1*rotor_r; % between one or two rotor radius -> steady state
 
 for i = 1:numel(x)
     aux  = height_diff(i);

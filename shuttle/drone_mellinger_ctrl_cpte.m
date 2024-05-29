@@ -31,13 +31,6 @@ D = diag ([dx, dy, dz]);
 e_p = p - p_d;
 e_v = v - v_d;
 
-% desired force vector with attitude
-
-T = 0;
-vi = 0;
-
-b = 3.7*10^-7;
-dw = 0;
 
  % if the compensation for the downwash is activated
 if dw_on == 1
@@ -54,9 +47,7 @@ if dw_on == 1
     else
        aux = v-P.Vw;
        v_air_drone_below = aux(1:3,1); 
-      
-      
-    
+
     end
 
 % no compensation for the downwash
@@ -77,10 +68,11 @@ end
 
 v_air = v_air_drone_below;
 
-rotor_drag_force = R*D*R'*v_air;
+rotor_drag_force = P.m*R*D*R'*v_air;
 
-Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
-%Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
+Cd = 1.18;
+%Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
+%Cd = 0.0346 * A * (((v_air).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
 
 frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
 %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation
@@ -88,9 +80,14 @@ frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
 f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force - frame_drag ; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
 
 
+% if f_dr(3)>100
+%     f_dr(3) = 100;
+% end
+
 % compute thrust
 if P.scenario >= 4 
     T= f_dr'*zB; % kh*(v'*(R(:,1)+R(:,2)))^2;
+    
 else
     T = f_d'*zB;
 end

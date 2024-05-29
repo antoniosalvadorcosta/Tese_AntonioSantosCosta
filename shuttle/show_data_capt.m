@@ -224,8 +224,6 @@ if show_simulations_plots ~= 0
         axis equal;  % Equal aspect ratio
         view(180, 90);  % View from upside-down perspective
         
-        
-        
         figure;
 	        hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
 	        href{1} = plot3(p_ref{1}(1,:),p_ref{1}(2,:),p_ref{1}(3,:),'--','Color',sstgray);
@@ -260,9 +258,6 @@ if show_simulations_plots ~= 0
         legend('Drone 1', 'Drone 2')
     end
     ylabel('$$T(t)$$ [N]');
-     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     title('Control variables');
     subplot(412);
     plot(t,tau{1}(1,:),'Color',dcolors{1});
@@ -273,10 +268,6 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\tau_1(t)$$ [N m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
-    
     subplot(413);
     plot(t,tau{1}(2,:),'Color',dcolors{1});
     hold on;
@@ -286,10 +277,6 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\tau_2(t)$$ [N m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-     end
-    
     subplot(414);
     plot(t,tau{1}(3,:),'Color',dcolors{1});
     hold on;
@@ -300,9 +287,6 @@ if show_simulations_plots ~= 0
     grid on;
     xlabel('$$t$$ [s]');
     ylabel('$$\tau_3(t)$$ [N m]');
-     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     print2pdf([imgs_folder filename '_act'],do_print);
     
     
@@ -310,79 +294,45 @@ if show_simulations_plots ~= 0
     
     figure(102);
     subplot(311);
-    if P.scenario ~= 6
-        plot(t,p_ref{1}(1,:),'Color',sstgray);
-        
-    end
     hold on;
     plot(t,x{1}(1,:),'Color',dcolors{1});
     for iD = 2:Param.nD
-        if P.scenario ~= 6
-            plot(t,p_ref{iD}(1,:),'Color',sstgray);
-        end
         plot(t,x{iD}(1,:),'Color',dcolors{iD});
     end
     hold off;
     grid on;
-    if P.scenario ~= 6
-        legend('X Reference', 'X Position')
-    else
-        legend('Shutle Drone', 'Target Drone')
-    end
     ylabel('$$x(t)$$ [m]');
-    if P.scenario ~= 6
-        title('Drone position and reference');
-    else
-        title('Drone position');
-    end
+    title('Drone position');
+     
     
     
     %------------------------- Position Y
     subplot(312);
-    if P.scenario ~= 6
-        plot(t,p_ref{1}(2,:),'Color',sstgray);
-    end
+
     hold on;
     plot(t,x{1}(2,:),'Color',dcolors{1});
     for iD = 2:Param.nD
-        if P.scenario ~= 6
-            plot(t,p_ref{iD}(2,:),'Color',sstgray);
-        end
         plot(t,x{iD}(2,:),'Color',dcolors{iD});
     end
     hold off;
     grid on;
-    if P.scenario ~= 6
-        legend('Y Reference', 'Y Position')
-    else
-        legend('Shutle Drone', 'Target Drone')
-    end
+    legend('Drone 1', 'Drone 2')
     ylabel('$$y(t)$$ [m]');
     
     %------------------------- Position Z
     
     subplot(313);
-    if P.scenario ~= 6
-        plot(t,p_ref{1}(3,:),'Color',sstgray);
-        
-    end
     hold on;
     plot(t,x{1}(3,:),'Color',dcolors{1});
     for iD = 2:Param.nD
-        if P.scenario ~= 6
-            plot(t,p_ref{iD}(3,:),'Color',sstgray);
-        end
         plot(t,x{iD}(3,:),'Color',dcolors{iD});
     end
     hold off;
     grid on;
-    if P.scenario ~= 6
-        legend('Z Reference', 'Z Position')
-    else
-        legend('Shutle Drone', 'Target Drone')
-    end
+    
     xlabel('$$t$$ [s]');
     ylabel('$$z(t)$$ [m]');
+    legend('Shuttle Drone', 'Target Drone compensated','Target Drone not compensated')
     print2pdf([imgs_folder filename '_pos'],do_print);
     
     
@@ -402,50 +352,41 @@ if show_simulations_plots ~= 0
     hold on;
     plot(t, x{1}(4,:), 'Color', dcolors{1});
     for iD = 2:Param.nD
-        plot(t, v_ref{iD}(1,:), 'Color', sstgray);
+       % plot(t, v_ref{iD}(1,:), 'Color', sstgray);
         plot(t, x{iD}(4,:), 'Color', dcolors{iD});
     end
     hold off;
     grid on;
     ylabel('$$v_x(t)$$ [m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     title('Drone velocity and reference');
 
     % Velocity in Y direction
     subplot(312);
-    plot(t, v_ref{1}(2,:), 'Color', sstgray);
+    %plot(t, v_ref{1}(2,:), 'Color', sstgray);
     hold on;
     plot(t, x{1}(5,:), 'Color', dcolors{1});
     for iD = 2:Param.nD
-        plot(t, v_ref{iD}(2,:), 'Color', sstgray);
+        %plot(t, v_ref{iD}(2,:), 'Color', sstgray);
         plot(t, x{iD}(5,:), 'Color', dcolors{iD});
     end
     hold off;
     grid on;
     ylabel('$$v_y(t)$$ [m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
 
     % Velocity in Z direction
     subplot(313);
-    plot(t, v_ref{1}(3,:), 'Color', sstgray);
+    %plot(t, v_ref{1}(3,:), 'Color', sstgray);
     hold on;
     plot(t, x{1}(6,:), 'Color', dcolors{1});
     for iD = 2:Param.nD
-        plot(t, v_ref{iD}(3,:), 'Color', sstgray);
+        %plot(t, v_ref{iD}(3,:), 'Color', sstgray);
         plot(t, x{iD}(6,:), 'Color', dcolors{iD});
     end
     hold off;
     grid on;
     xlabel('$$t$$ [s]');
     ylabel('$$v_z(t)$$ [m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
-
+    legend('Shuttle Drone', 'Target Drone compensated','Target Drone not compensated')
     print2pdf([imgs_folder filename '_vel'],do_print);
     
     %-------------------------------- Attitude -------------------------------
@@ -461,9 +402,6 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\phi(t)$$ [deg]');
     title('Attitude (euler angles)');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     
     subplot(312);
     plot(t,lbd{1}(2,:)*180/pi,'Color',dcolors{1});
@@ -473,9 +411,7 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+
     ylabel('$$\theta(t)$$ [deg]');
     
     subplot(313);
@@ -490,9 +426,8 @@ if show_simulations_plots ~= 0
     grid on;
     xlabel('$$t$$ [s]');
     ylabel('$$\psi(t)$$ [deg]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+    legend('Shuttle Drone', 'Target Drone compensated','Target Drone not compensated')
+
     print2pdf([imgs_folder filename '_eul'],do_print);
     
     %--------------------------- Angular velocity ------------------------
@@ -506,9 +441,6 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\omega_x(t)$$ [deg/s]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     title('Angular velocity');
     subplot(312);
     plot(t,x{1}(17,:)*180/pi,'Color',dcolors{1});
@@ -519,9 +451,6 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\omega_y(t)$$ [deg/s]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     subplot(313);
     plot(t,x{1}(18,:)*180/pi,'Color',dcolors{1});
     hold on;
@@ -532,9 +461,6 @@ if show_simulations_plots ~= 0
     grid on;
     xlabel('$$t$$ [s]');
     ylabel('$$\omega_z(t)$$ [deg/s]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
     print2pdf([imgs_folder filename '_om'],do_print);
     
     figure(109);
@@ -550,6 +476,9 @@ if show_simulations_plots ~= 0
     xlabel('$$t$$ [s]');
     legend('Yaw Reference', 'Yaw Real')
     ylabel('$$\psi(t)$$ [deg]');
+    
+    
+    
     % Set the plot limits to fill the plot area
     set(gca, 'XLim', [min(t), max(t)], 'YLim', [0, 130]);
     print2pdf([imgs_folder filename '_yaw'],do_print);
@@ -593,6 +522,6 @@ if show_simulations_plots ~= 0
     % if P.scenario < 6
     %     disp("Not displaying animation")
     %else
-    drone_animate(p,p_ref,lbd,t,dcolors);
+    %drone_animate(p,p_ref,lbd,t,dcolors);
     % end
 end

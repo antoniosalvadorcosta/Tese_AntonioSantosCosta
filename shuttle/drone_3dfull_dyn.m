@@ -10,7 +10,6 @@ if P.scenario > 2
     A = P.Pa;
 end
 A = P.Pa;
-z_drone_bellow = 0;
 vw = P.Vw;
 kh = 0.09;
 
@@ -19,8 +18,6 @@ dx = 0.50;
 dy = 0.39;
 dz = 0.11;
 D = diag ([dx, dy, dz]);
-
-c = T/P.m + 0.09*(v'*(R(:,1)+R(:,2))).^2;
 
 % equations of motion
 if P.scenario <= 1
@@ -39,8 +36,7 @@ if P.scenario > 1
         disp('Drone unstable!');
         disp(T);
     else
-        vi = 0;
-        v_air = v-P.Vw;
+        v_air = v-vw;
 
     end
     
@@ -49,20 +45,20 @@ if P.scenario > 1
     
    
     % rotor drag force
-    rotor_drag_force = R*D*R'*v_air;
+    rotor_drag_a = R*D*R'*v_air;
     
     % Body drag coeficient and force
     
-    %Cd = 1.18; % Aerodynamics aeronautics and flight mechanics
-    Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
+    Cd = 1.18 ; % Aerodynamics aeronautics and flight mechanics
+    %Cd = 0.03 / (P.m^0.5); %  (Schneider & Peters, 2001)
     %Cd = 0.0346 * A * (((aux(1:3,1)).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
     
-    frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
+    frame_drag_a = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air)/P.m;
   
     %frame_drag = (1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
     
     dp = v;       % T/P.m*zB
-    dv = -P.g*zW + T/P.m*zB - rotor_drag_force - frame_drag;
+    dv = -P.g*zW + T/P.m*zB - rotor_drag_a - frame_drag_a;
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end

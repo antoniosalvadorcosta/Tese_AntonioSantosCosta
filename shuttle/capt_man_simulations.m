@@ -21,7 +21,7 @@ clear all;
     sstbrown        = [165, 42, 42]/255; % Medium brown
     sstgray         = [70,70,70]/255;
     yellow          = [187, 139, 25]/255;
-    %dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+    %dcolors = { sstgreen, sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
     dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 
@@ -33,12 +33,12 @@ clear all;
 situation = 0;
 
 % drones safety distance
-Param.height_diff = 0.20;
+Param.height_diff = 0.50;
 
 drone_init_6;
 
 % flag for controller downwash compensation
-dw_comp = 1;
+dw_comp = 0;
 
 drone_main_simul_cpte;
 
@@ -47,8 +47,7 @@ show_simulations_plots = 1;
 drone_show_data;
 
 
-% dcolors = { sstred,sstgreen, sstgreen  , sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
-% 
+% dcolors = { sstgreen, sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 % 
 % % flag for controller downwash compensation
 % dw_comp = 0;

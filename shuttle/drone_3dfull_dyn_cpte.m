@@ -43,16 +43,20 @@ if P.scenario > 1
     if T < 0  
         disp('Drone unstable (model)!');
         disp(T);
-    else
-          vi = sqrt(T/(2*P.air_d*P.A));
+   
     end
+    
+%     if T > 100
+%         
+%         T = 100;
+%     end
     
     if other_p(3) > p(3)
         
         
         dw =  f_dw3_0(other_p,p,other_T, other_v,P);
         
-        v_air_0 = v- P.Vw;
+       
         v_air = v- P.Vw - [0;0;dw];
         
         v_air_store = [v_air_store; v_air(3)];
@@ -72,16 +76,19 @@ if P.scenario > 1
     end
     
     % rotor drag force
-    rotor_drag_force = R*D*R'*v_air;
+    rotor_drag_a = R*D*R'*v_air;
     
     % Body drag coeficient and force
-    Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
+    
+    %Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
+    Cd = 1.18;
+    %Cd = 0.0346 * A * (((v_air).^2)/(P.m^0.6));
                                                 
     frame_drag_force = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
     total_disturb_force =0 ;
    
     dp = v;      
-    dv = -P.g*zW + (T/P.m)*zB + rotor_drag_force + frame_drag_force; 
+    dv = -P.g*zW + (T/P.m)*zB + rotor_drag_a + frame_drag_force/P.m; 
     dR = R*skew(om);
     dom = P.I^(-1)*(-skew(om)*P.I*om + tau);
 end
