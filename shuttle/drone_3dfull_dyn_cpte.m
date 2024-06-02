@@ -52,15 +52,10 @@ if P.scenario > 1
 %     end
     
     if other_p(3) > p(3)
-        
-        
+
         dw =  f_dw3_0(other_p,p,other_T, other_v,P);
-        
-       
         v_air = v- P.Vw - [0;0;dw];
-        
         v_air_store = [v_air_store; v_air(3)];
-       
         % Drone below induced velocity in hovering
         vh = sqrt(T/(2*P.air_d*P.rotor_radius^2*pi));
 

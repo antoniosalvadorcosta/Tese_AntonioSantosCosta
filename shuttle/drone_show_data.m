@@ -117,10 +117,11 @@ else
 
     if P.scenario == 6
         e_p = p{2} - p_ref{2};
-        z_ep = e_p(3,:);
-        medium_error_z = mean(z_ep);
-        fprintf('\nError in z (mean) "%s": ',scenario_dcrpt);
-        fprintf('%f\n',medium_error_z);
+        %z_ep = e_p(3,:);
+        rmse_value =  sqrt(mean(vecnorm(e_p).^2));
+        %medium_error_z = mean(z_ep);
+        fprintf('\nRMSE in "%s": ',scenario_dcrpt);
+        fprintf('%f\n',rmse_value);
     else
         if P.scenario == 7
             e_p = p{1} - p_ref{1};
@@ -198,7 +199,7 @@ if show_simulations_plots ~= 0
         zlabel('z [m]');
         legend('Start', 'Reference', 'end');
         
-    
+    print2pdf([imgs_folder filename '_traj'],do_print);
     % if it is the 4 drones' simulation
     else
             figure(100);
@@ -211,7 +212,7 @@ if show_simulations_plots ~= 0
 	        hold off;
 	        %grid on;
 	        axis equal;
-	        % axis([-1.2 1.2 -1.2 1.2 0 3]);
+	       
 	        xlabel('x [m]');
 	        ylabel('y [m]');
 	        zlabel('z [m]');
@@ -227,8 +228,8 @@ if show_simulations_plots ~= 0
         
         
         figure;
-	        hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
-	        href{1} = plot3(p_ref{1}(1,:),p_ref{1}(2,:),p_ref{1}(3,:),'--','Color',sstgray);
+	        %hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
+	        href{1} = plot3(p_ref{1}(1,:),p_ref{1}(2,:),p_ref{1}(3,:),'-','Color',sstgray);
 	        for iD = 1:Param.nD
 	            if iD == 1, hold on; end
 	            hp{iD} = plot3(p{iD}(1,:),p{iD}(2,:),p{iD}(3,:),'-','Color',dcolors{iD});
@@ -241,10 +242,10 @@ if show_simulations_plots ~= 0
 	        ylabel('y [m]');
 	        zlabel('z [m]');
         legend('Reference', 'Scenario A', 'Scenario B', 'Scenario C', 'Scenario D');
-
+        print2pdf([imgs_folder filename '_4traj'],do_print);
     
     end
-    print2pdf([imgs_folder filename '_traj'],do_print);
+    
     
     % --------------------------------------- Control Variable --------------------
     figure(101);
@@ -564,7 +565,7 @@ if show_simulations_plots ~= 0
         xlabel('$$t$$ [s]');
         legend('Downwash velocity')
         ylabel('$$Downwash$$ [m/s]');
-        
+        print2pdf([imgs_folder filename '_dw'],do_print);
         
 %         
 %         figure(5);
@@ -593,6 +594,6 @@ if show_simulations_plots ~= 0
     % if P.scenario < 6
     %     disp("Not displaying animation")
     %else
-    drone_animate(p,p_ref,lbd,t,dcolors);
+    %drone_animate(p,p_ref,lbd,t,dcolors);
     % end
 end

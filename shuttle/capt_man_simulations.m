@@ -33,7 +33,7 @@ clear all;
 situation = 0;
 
 % drones safety distance
-Param.height_diff = 0.50;
+Param.height_diff = 0.5;
 
 drone_init_6;
 

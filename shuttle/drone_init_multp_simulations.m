@@ -22,7 +22,7 @@ Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
 Param.omn = 1;
 Param.dphase = -pi/12;% ref circle angular difference between drones
-Param.ref_mode = 3; % reference: 1 - square wave; 2 - circle
+Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
 Param.Vw = [0;0;0];
 
 % M690B drone
@@ -32,7 +32,7 @@ Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0;
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([2,2,2]);
+Param.ki = 0*diag([2,2,2]);
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 % Param.kp = diag([10,10,6]);
@@ -47,9 +47,9 @@ Param.air_d = 1.225;
 
 %Projected Area
 
-Param.Pa = [0.6 0 0;
-    0 0.6 0;
-    0 0 0.5];
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
 % Param.width = 0.6;
 % Param.length = 0.6;
 % Param.height = 0.3;
@@ -73,7 +73,7 @@ for iD = 1:Param.nD
     
 
     % set initial conditions
-    p0{iD} = [4.5;3;3];
+    p0{iD} = [4.5;3;0];
     v0{iD} = [0;0;0];
     psi0{iD} = pi/20*((Param.nD-1)/2-iD+1);
     R0{iD} = Euler2R([0;0;psi0{iD}]);

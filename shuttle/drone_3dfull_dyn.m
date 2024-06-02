@@ -55,7 +55,7 @@ if P.scenario > 1
     
     frame_drag_a = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air)/P.m;
   
-    %frame_drag = (1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
+    % frame_drag = (1/2)*P.air_d*Cd.*A*(v_air*norm(v_air));
     
     dp = v;       % T/P.m*zB
     dv = -P.g*zW + T/P.m*zB - rotor_drag_a - frame_drag_a;

@@ -1,3 +1,4 @@
+
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
@@ -32,9 +33,9 @@ Param.omn = 1;
 
 %air density
 Param.air_d = 1.225;
-Param.Pa = [0.6 0 0;
-            0 0.6 0;
-            0 0 0.5];
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
 %Area swept by the rotor
 Param.rotor_radius = 0.18;
 Param.A = pi*Param.rotor_radius^2;
@@ -53,7 +54,7 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.kom= diag([1,1,1]);
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([2,2,2]);
+Param.ki = 0*diag([2,2,2]);
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 

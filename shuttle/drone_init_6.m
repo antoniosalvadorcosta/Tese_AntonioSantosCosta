@@ -30,16 +30,16 @@ Param.Vw = [0;0;0];
 Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0;
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([0.1,0.1,0.1]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
-% Param.kp = diag([10,10,6]);
-% Param.kv = diag([5,5,5]);
-% Param.ki = diag([0.1,0.1,0.1]);
-% Param.kR = diag([20,20,20]);
-% Param.kom= diag([0.2,0.2,0.2]);
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([0.1,0.1,0.1]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
+Param.kp = diag([10,10,6]);
+Param.kv = diag([5,5,5]);
+Param.ki = diag([0.1,0.1,0.1]);
+Param.kR = diag([20,20,20]);
+Param.kom= diag([0.2,0.2,0.2]);
 
 Param.d2_height = 2.0;
 
