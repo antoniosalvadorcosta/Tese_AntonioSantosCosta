@@ -43,7 +43,7 @@ Param.A = pi*Param.rotor_radius^2;
 
 % M690B drone 
 % (guessing parameters! needs identification)
-Param.m = 5;        % drone mass (added board)
+Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0.00;     % frame drag coeficient
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
@@ -71,8 +71,8 @@ situation = 0;
 Param.Vw = [0;0;0];
 rmse_values_wind = [];
 wind_values_x = [[0; 0; 0] ,[2; 0; 0], [5; 0; 0], [10; 0; 0], [15; 0; 0]];
-wind_values_y = [[0; 0; 0] ,[0; -1; 0], [0; -2; 0], [0; -5; 0], [0; -10; 0]];
-wind_values_z = [[0; 0; 0] ,[0; 0; -1], [0; 0; -2], [0; 0; -5], [0; 0; -10]];
+wind_values_y = [[0; 0; 0] ,[0; 1; 0], [0; 2; 0], [0; 5; 0], [0; 10; 0]];
+wind_values_z = [[0; 0; 0] ,[0; 0; 1], [0; 0; 2], [0; 0; 5], [0; 0; 10]];
 
 wind_values = wind_values_x;
 

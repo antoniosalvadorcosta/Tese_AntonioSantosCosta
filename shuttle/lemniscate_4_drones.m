@@ -27,8 +27,8 @@ tracking_sim = 0;
     yellow          = [187, 139, 25]/255;
     %dcolors = { sstgreen, sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
-dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
-drone_show_data;
+dcolors = { sstred, sstblue, yellow, sstlightgreen, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+show_data_scenarios;
 
 
 

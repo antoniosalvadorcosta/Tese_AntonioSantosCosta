@@ -9,15 +9,17 @@ do_print = 1; % set to 1 to plot each plot in a PDF file (for latex reports)
 do_save_workspace = 0; % set to 1 to save workspace to *.mat file
 
 % downwash shapping parameters sugested by Gemini
-Param.k = 0.8;                % between 0 and 1
-Param.h = 2*P.rotor_radius;          % in the range of rotor diameter or slightly larger
+% Param.k = 0.8;                % between 0 and 1
+% Param.h = 2*P.rotor_radius;          % in the range of rotor diameter or slightly larger
 
 
 Param.Vw = [0;0;0];
 % drones' characteristics
-m = 4;
+m =4;
 rotor_r = 0.18;
-T1 = m * 9.81;
+Total_T = m * 9.81;
+
+T1 = Total_T / 4;
 disk_area = pi*rotor_r^2;
 arm_length = 0.395;
 L = arm_length * 2;

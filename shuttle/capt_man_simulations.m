@@ -1,4 +1,5 @@
 
+
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
@@ -23,7 +24,7 @@ clear all;
     yellow          = [187, 139, 25]/255;
     %dcolors = { sstgreen, sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
-    dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+    %dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 
 
 
@@ -35,6 +36,9 @@ situation = 0;
 % drones safety distance
 Param.height_diff = 0.5;
 
+
+%-------------------- first simulation -------------------
+
 drone_init_6;
 
 % flag for controller downwash compensation
@@ -42,18 +46,19 @@ dw_comp = 0;
 
 drone_main_simul_cpte;
 
+
+
+%-------------------- second simulation -------------------
+
+drone_init_6_part2;
+
+dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% 
+% flag for controller downwash compensation
+dw_comp = 1;
+
+drone_main_simul_cpte_2;
+
 show_simulations_plots = 1;
 
-drone_show_data;
-
-
-% dcolors = { sstgreen, sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
-% 
-% % flag for controller downwash compensation
-% dw_comp = 0;
-% 
-% drone_main_simul_cpte;
-% 
-% show_simulations_plots = 1;
-% 
-% drone_show_data;
+show_data_c;

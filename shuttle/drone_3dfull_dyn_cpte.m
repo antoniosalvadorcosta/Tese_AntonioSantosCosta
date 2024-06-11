@@ -1,8 +1,8 @@
-function [dp,dv,dR,dom] = drone_3dfull_dyn_cpte(p,v,R,om,T,tau,F,P,other_p, other_T, other_v)
+function [dp,dv,dR,dom] = drone_3dfull_dyn_cpte(p,v,R,om,T,tau,P,other_p, other_T)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
 
-global v_air_store;
+
 
 % auxiliary variables
 zW = [0;0;1];
@@ -53,15 +53,15 @@ if P.scenario > 1
     
     if other_p(3) > p(3)
 
-        dw =  f_dw3_0(other_p,p,other_T, other_v,P);
+        dw =  f_dw3_0(other_p,p,other_T, P);
         v_air = v- P.Vw - [0;0;dw];
-        v_air_store = [v_air_store; v_air(3)];
-        % Drone below induced velocity in hovering
-        vh = sqrt(T/(2*P.air_d*P.rotor_radius^2*pi));
-
-        vi = 0;
-        % Drone below induced velocity
-        vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
+       
+%         % Drone below induced velocity in hovering
+%         vh = sqrt(T/(2*P.air_d*P.rotor_radius^2*pi));
+%         
+%         vi = 0;
+%         % Drone below induced velocity
+%         vi = (vh^2)/(sqrt(v_air(1)^2 + v_air(2)^2 + (vi + v_air(3))^2));
         
       
     else

@@ -94,12 +94,12 @@ for iD = 1:Param.nD
     psi0{iD} = pi/20*((Param.nD-1)/2-iD+1);
     R0{iD} = Euler2R([0;0;psi0{iD}]);
     om0{iD} = [0;0;0];
-    x{iD} = zeros(nx,Nsim+1);
+    x_2{iD} = zeros(nx,Nsim+1);
     xiep{iD} = zeros(3,Nsim+1);
-    T{iD} = zeros(1,Nsim);
-    tau{iD} = zeros(3,Nsim);
+    T_2{iD} = zeros(1,Nsim);
+    tau_2{iD} = zeros(3,Nsim);
     lbd{iD} = zeros(3,Nsim);
-    x{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
+    x_2{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
     
     if iD == 2 % linear for drone 2
         
