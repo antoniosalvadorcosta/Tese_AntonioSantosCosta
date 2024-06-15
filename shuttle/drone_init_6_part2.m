@@ -98,7 +98,7 @@ for iD = 1:Param.nD
     xiep{iD} = zeros(3,Nsim+1);
     T_2{iD} = zeros(1,Nsim);
     tau_2{iD} = zeros(3,Nsim);
-    lbd{iD} = zeros(3,Nsim);
+    lbd_2{iD} = zeros(3,Nsim);
     x_2{iD}(:,1) = [p0{iD};v0{iD};reshape(R0{iD},[],1);om0{iD}];
     
     if iD == 2 % linear for drone 2

@@ -31,7 +31,7 @@ for k = 1:Nsim
         
         
         % nonlinear drone model (continuous time)
-        [dot_p,dot_v,dot_R,dot_om, v_air] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);
+        [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);
         
         % discretization 
         pp = p{iD} + Param.dTi*dot_p;

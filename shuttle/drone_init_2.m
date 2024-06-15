@@ -30,18 +30,20 @@ Param.Vw = [0;0;0];
 
 situation = 0;
 %air density
+Param.Vw = [0;0;0];
+
+%air density
 Param.air_d = 1.225;
-Param.Pa = [0.6 0 0;
-            0 0.6 0;
-            0 0 0.5];
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
 %Area swept by the rotor
 Param.rotor_radius = 0.18;
 Param.A = pi*Param.rotor_radius^2;
 
-
 % M690B drone 
 % (guessing parameters! needs identification)
-Param.m = 5;        % drone mass (added board)
+Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0.00;     % frame drag coeficient
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
@@ -52,7 +54,7 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.kom= diag([1,1,1]);
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([2,2,2]);
+Param.ki = 0*diag([2,2,2]);
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 
@@ -80,11 +82,11 @@ for iD = 1:Param.nD
     if Param.ref_mode == 2 % circle reference
       phase{iD} = (iD-1)*Param.dphase;
      
-        v_ref{iD} = 0*[-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+        v_ref{iD} = [-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];
         p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});Param.vz_d*t+Param.p_ref_static(3)];
          
-        a_ref{iD} = 0*[-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
-        j_ref{iD} = 0*[ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
+        a_ref{iD} = [-Param.Rad*Param.omn^2*cos(Param.omn*t+phase{iD});-Param.Rad*Param.omn^2*sin(Param.omn*t+phase{iD});0*ones(size(t))];
+        j_ref{iD} = [ Param.Rad*Param.omn^3*sin(Param.omn*t+phase{iD});-Param.Rad*Param.omn^3*cos(Param.omn*t+phase{iD});0*ones(size(t))];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
        

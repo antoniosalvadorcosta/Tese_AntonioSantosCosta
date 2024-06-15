@@ -34,7 +34,7 @@ clear all;
 situation = 0;
 
 % drones safety distance
-Param.height_diff = 0.5;
+Param.height_diff = 1;
 
 
 %-------------------- first simulation -------------------
@@ -55,7 +55,7 @@ drone_init_6_part2;
 dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 % 
 % flag for controller downwash compensation
-dw_comp = 1;
+dw_comp = 0.5;
 
 drone_main_simul_cpte_2;
 

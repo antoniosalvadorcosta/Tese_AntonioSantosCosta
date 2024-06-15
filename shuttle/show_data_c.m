@@ -122,8 +122,16 @@ else
         %z_ep = e_p(3,:);
         rmse_value =  sqrt(mean(vecnorm(e_p).^2));
         rmse_value2 =  sqrt(mean(vecnorm(e_p2).^2));
+      
+        z_ep = e_p(3,:);
+        medium_error_z = mean(z_ep);
+        z_ep2 = e_p2(3,:);
+        medium_error_z2 = mean(z_ep2);
         
-        %medium_error_z = mean(z_ep);
+        fprintf('\nError in z (mean) "%s": ',scenario_dcrpt);
+        fprintf('%f\n',medium_error_z);
+        fprintf('%f\n',medium_error_z2);
+        
         fprintf('\nRMSE in "%s": ',scenario_dcrpt);
         fprintf('%f\n',rmse_value);
         fprintf('%f\n',rmse_value2);
@@ -479,7 +487,7 @@ if show_simulations_plots ~= 0
         
         hold on;
         for a = 1:2
-           plot(t, vd{a}, 'Color', dcolors{a+1}); 
+           plot(t, vd{a}, 'Color', dcolors{a}); 
         end
         title('Downwash velocity');
         hold off;
@@ -488,6 +496,7 @@ if show_simulations_plots ~= 0
         legend('Target Drone', 'Target Drone Full')
         ylabel('$$Downwash velocity$$ [m/s]');
         print2pdf([imgs_folder filename '_dw'],do_print);
+        
         disp(max(vd_store));
         disp(max(vd_store_2));
 

@@ -24,12 +24,12 @@ Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
 Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
-Param.Vw = 1;
+Param.Vw = 0;
 Param.ref_mode = 1; % reference: 1 - square wave; 2 - circle
 
 % M690B drone 
 % (guessing parameters! needs identification)
-Param.m = 5;        % drone mass (added board)
+Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0.00;     % frame drag coeficient
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
@@ -38,19 +38,28 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.ki = zeros(3);
 % Param.kR = diag([15,15,15]);
 % Param.kom= diag([1,1,1]);
-Param.kp = diag([15,15,15]);
-Param.kv = diag([15,15,15]);
-Param.ki = diag([0,0,0]);
-Param.kR = diag([20,20,20]);
-Param.kom= diag([2,2,2]);
+Param.kp = diag([20,20,20]);
+Param.kv = diag([10,10,10]);
+Param.ki = 0*diag([2,2,2]);
+Param.kR = diag([30,30,30]);
+Param.kom= diag([1,1,1]);
+
 % Param.kp = diag([20,20,20]);
 % Param.kv = diag([10,10,10]);
 % Param.ki = diag([2,2,2]);
 % Param.kR = diag([30,30,30]);
 % Param.kom= diag([1,1,1]);
 
+Param.Vw = [0;0;0];
 
-P.rotor_radius = 0.18;
+%air density
+Param.air_d = 1.225;
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
+%Area swept by the rotor
+Param.rotor_radius = 0.18;
+Param.A = pi*Param.rotor_radius^2;
 
 % initialize variables for all drones:
 t = 0:Param.dTi:Param.Tend;

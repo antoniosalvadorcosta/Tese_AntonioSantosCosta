@@ -10,6 +10,7 @@ P = Param;
 global vd_store;
 
 if P.scenario == 1
+    scenario_dcrpt = "Basic controller";
     imgs_folder = 'figures/mellinger/sc1_';
 end
 
@@ -162,9 +163,9 @@ if show_simulations_plots ~= 0
 %     sstbrown        = [165, 42, 42]/255; % Medium brown
 %     sstgray         = [70,70,70]/255;
 %     yellow          = [187, 139, 25]/255;
-%     %dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+     dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 %     
-  dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+ % dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
     nD = length(p);
     nt = length(t);

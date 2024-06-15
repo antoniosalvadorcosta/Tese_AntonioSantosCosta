@@ -1,4 +1,4 @@
-drone_init_7;
+drone_init_2;
 
 
 
@@ -17,9 +17,9 @@ drone_init_7;
     sstbrown        = [165, 42, 42]/255; % Medium brown
     sstgray         = [70,70,70]/255;
     yellow          = [187, 139, 25]/255;
-    %dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+    dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
-    dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+    %dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
 
 
 situation = 0;
@@ -27,6 +27,6 @@ situation = 0;
 drone_main_simul;
 
 tracking_sim = 0;
-show_simulations_plots = 0;
+show_simulations_plots = 1;
 
 drone_show_data;
