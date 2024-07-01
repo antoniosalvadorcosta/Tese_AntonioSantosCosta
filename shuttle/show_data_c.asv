@@ -196,7 +196,6 @@ if show_simulations_plots ~= 0
     
     if situation == 0
         figure(100);
-        title('Drones 3D trajectory');
         for iD = 1:Param.nD
             hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
             if iD == 1, hold on; end
@@ -553,7 +552,7 @@ if show_simulations_plots ~= 0
         grid on;
         ylabel('$$v_{air_x}(t)$$ [m/s]');
         legend( 'Target Drone', 'Target Drone Full');
-        title('Drones air ir relative velocity');
+        title('Drone air relative velocity');
         
         % Velocity in Y direction
         subplot(312);

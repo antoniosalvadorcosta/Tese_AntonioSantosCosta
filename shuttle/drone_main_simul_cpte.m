@@ -7,10 +7,9 @@
 global vd_store;
 global v_air_store;
 
-
-
 vd_store = [0;0];
 
+v_air_store = zeros(3,2);
 
 dw = 0;
 tracking_sim = 0;

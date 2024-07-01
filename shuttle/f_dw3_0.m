@@ -11,11 +11,8 @@ z = p1(3)- p2(3);
 
 axial_diff = z - z_0;
 
-
-
 % Drone above induced velocity in hovering
 vh = sqrt(T1/(2*P.air_d*disk_area));
-
 vi = vh;
 
 % Vmax around centerline

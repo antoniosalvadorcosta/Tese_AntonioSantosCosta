@@ -104,17 +104,12 @@ for iD = 1:Param.nD
     if iD == 2 % linear for drone 2
         
         phase{iD} = (iD-1)*Param.dphase;
-        
-        
-        
         p_ref{iD} = [t ;3*ones(size(t));Param.d2_height*ones(size(t))];
         v_ref{iD} = [ones(size(t));zeros(size(t));zeros(size(t))];
-        
-        
+
         % Drone parado
 %         p_ref{iD} = [49*ones(size(t)) ;3*ones(size(t));Param.d2_height*ones(size(t))];
 %         v_ref{iD} = [zeros(size(t));zeros(size(t));zeros(size(t))];
-
 
         a_ref{iD} = [zeros(size(t));zeros(size(t));zeros(size(t))];
         j_ref{iD} = [zeros(size(t));zeros(size(t));zeros(size(t))];
@@ -138,13 +133,6 @@ for iD = 1:Param.nD
         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
 
 
-%           a = 0.10;
-%         p_ref{iD} = [t; 3*ones(size(t)); a*(t-15).^2 + Param.d2_height + Param.height_diff ];
-%         v_ref{iD} = [ones(size(t));zeros(size(t)); 2*a*(t-15)];
-%         a_ref{iD} = [zeros(size(t));zeros(size(t));  2*a*ones(size(t))];
-%         j_ref{iD} = [zeros(size(t));zeros(size(t)); zeros(size(t))];
-%         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));
-%         dpsi_ref{iD} = 0*Param.omn*ones(size(psi_ref{iD}));
 
         
         

@@ -59,8 +59,6 @@ else
     f_d = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d;
 end
 
-
-
 % compute thrust
 if P.scenario >= 4
     T= f_dr'*zB; % kh*(v'*(R(:,1)+R(:,2)))^2;

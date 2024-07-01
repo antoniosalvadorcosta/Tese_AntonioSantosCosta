@@ -15,6 +15,7 @@ do_save_workspace = 0; % set to 1 to save workspace to *.mat file
 
 Param.Vw = [0;0;0];
 % drones' characteristics
+
 m =4;
 rotor_r = 0.18;
 Total_T = m * 9.81;
@@ -61,11 +62,11 @@ for i = 1:numel(x)
     
     if aux > min_distance
        
-        vc = f_dw3_0(p1,p2(:,i),T1,v1, Param); 
+        vc = f_dw3_0(p1,p2(:,i),T1, Param); 
     else
         if abs(aux - min_distance) < 1e-1 && arrived == 0
             arrived = 1;
-            vc = f_dw3_0(p1,p2(:,i), T1, v1, Param);
+            vc = f_dw3_0(p1,p2(:,i), T1, Param);
             Vc_zenit = vc;
         end
         if aux < min_distance
@@ -93,6 +94,7 @@ plot(z, Vc, 'b');
 hold off;
 %grid on;
 xlabel('$$z$$ [m]');
+title('Downwash velocity under rotor disk');
 legend('Downwash velocity')
 ylabel('$$Downwash$$ [m/s]');
 print2pdf([imgs_folder filename '_2D'],do_print);
@@ -130,7 +132,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
                       
-            w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1, Param);
+            w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
             
         end
     end
@@ -172,7 +174,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
             
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1,Param);
+                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, Param);
             
         end
     end
@@ -211,7 +213,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
            
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1,v1, Param);
+                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1,  Param);
           
         end
     end
@@ -250,7 +252,7 @@ for i = 1:size(X, 1)
     for j = 1:size(X, 2)
         for k = 1:size(X, 3)
             
-                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1, v1, Param);
+                w(i, j, k) = f_dw3_0(p1, [X(i, j, k); Y(i, j, k); Z(i, j, k)], T1,  Param);
             
         end
     end
@@ -296,7 +298,7 @@ drone_plot([2.25;2.25;2.5], zeros(3,1), [],'r')
 xlabel('X (m)');
 ylabel('Y (m)');
 zlabel('Z (m)');
-title('3D Vector Field of Downwash Speed Below Rotor Disk');
+title('3D vector field of downwash speed below the shuttle drone');
 %grid on;
 axis tight;
 view(30, 30); % Adjust the view angle

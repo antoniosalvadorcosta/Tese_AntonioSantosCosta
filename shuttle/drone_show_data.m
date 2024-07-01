@@ -525,14 +525,14 @@ if show_simulations_plots ~= 0
         ylabel('$$Downwash$$ [m/s]');
         print2pdf([imgs_folder filename '_dw'],do_print);
         
-%         
-%         figure(5);
-%         plot(t, v_air_store, 'b');
-%         hold off;
-%         grid on;
-%         xlabel('$$z$$ [m]');
-%         legend('Relative air velocity')
-%         ylabel('$$V_air$$ [m/s]');
+        
+        figure(5);
+        plot(t, v_air_store, 'b');
+        hold off;
+        grid on;
+        xlabel('$$z$$ [m]');
+        legend('Relative air velocity')
+        ylabel('$$V_air$$ [m/s]');
 %         
 %         figure(5);
 %         plot(p_ref{1}(3,:), vd_store, 'b');

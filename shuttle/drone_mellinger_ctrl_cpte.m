@@ -8,9 +8,10 @@ function [T,tau,e_p] = drone_mellinger_ctrl_cpte(p,v,R,om,P,p_d,psi_d,ie_p,v_d,d
 %     if ~exist('a_d','var') || isempty(a_d), a_d = zeros(3,1); end
 %     if ~exist('j_d','var') || isempty(j_d), j_d = zeros(3,1); end
 
-global vd_store;
+global v_air_store;
+global  v_air_store_2;
 global  vd_store_2;
-
+global  vd_store;
 
 % auxiliary variables
 zW = [0;0;1];
@@ -37,13 +38,15 @@ if dw_on == 1
     
     % if the other drone at higher altitude
     if p_above(3) > p(3)
-        dw =  f_dw3_0(p_above,p,T_above,P);
-        v_air_drone_below = v - P.Vw - [0;0;dw];
+        dw = - f_dw3_0(p_above,p,T_above,P);
+        v_air_drone_below = v -P.Vw - [0;0;dw];
    
         vd_store_2 = [vd_store_2; dw];
+        
+      
 
     else
-       aux = v-P.Vw;
+       aux = v+P.Vw;
        v_air_drone_below = aux(1:3,1); 
 
     end
@@ -53,16 +56,20 @@ else
     % the other drone is above, still store the downwash values
     if p_above(3) > p(3)
         
-        dw =  f_dw3_0(p_above,p,T_above,P);
+        dw =  -f_dw3_0(p_above,p,T_above,P);
         vd_store = [vd_store; dw];
        
+         aux = v+P.Vw;
+         v_air_drone_below = aux(1:3,1);
+         v_air_store = [v_air_store , v_air_drone_below];
     end
     
-    aux = v-P.Vw;
+    aux = v+P.Vw;
     v_air_drone_below = aux(1:3,1);
+    
+   
   
 end
-
 
 v_air = v_air_drone_below;
 
@@ -72,10 +79,10 @@ Cd = 1.18;
 %Cd = 0.03 * A / (P.m^0.5); %  (Schneider & Peters, 2001)
 %Cd = 0.0346 * A * (((v_air).^2)/(P.m^0.6)); % 2022, Analytical and experimental study of quadrotor body drag coefficients considering different quadrotor shapes" by Cai et al. (2022) in the journal Aerospace Science and Technology
 
-frame_drag = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
+frame_drag_force = (1/2)*P.air_d*Cd.*A*(v_air.^2).*sign(v_air);
 %frame_drag = (Cd * A * ((aux(1:3,1)).^2))/2; % He, C., Li, Z., & Xie, H. (2012). Investigation
 
-f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d - rotor_drag_force - frame_drag ; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
+f_dr = -P.kp*e_p - P.ki*ie_p - P.kv*e_v + P.m*P.g*zW + P.m*a_d + rotor_drag_force;% + frame_drag_force ; %(1/2)*P.air_d*P.D*A*((aux(1:3,1)).^2).*sign(aux(1:3,1));
 
 
 % if f_dr(3)>100

@@ -12,7 +12,7 @@ Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
 Param.nD = 1; % number of drones
-Param.scenario=5; %scenario for simulation with melling controller considering rotor drag to response with uadratic wave
+Param.scenario=3; %scenario for simulation with melling controller considering rotor drag to response with uadratic wave
 
 
 % reference parameters
@@ -25,16 +25,16 @@ Param.Rad = 5;        % radius of circle
 Param.omn = 0.2;  % rotation frequency
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
-Param.Vw = [1;1;1];
+Param.Vw = [0;0;-15];
 
 % M690B drone 
 % (guessing parameters! needs identification)
-Param.m = 5;        % drone mass (added board)
+Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0;
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
-Param.ki = diag([0.2,0.2,0.5]);
+Param.ki = 0*diag([0.2,0.2,0.5]);
 Param.kR = diag([30,30,30]);
 Param.kom= diag([1,1,1]);
 % Param.kp = diag([10,10,6]);
@@ -47,10 +47,11 @@ Param.kom= diag([1,1,1]);
 %air density
 Param.air_d = 1.225;
 
+ 
 %Projected Area
-Param.Pa = [0.6 0 0;
-            0 0.6 0;
-            0 0 0.5];
+Param.Pa = [0.57 0 0;
+    0 0.57 0;
+    0 0 0.475];
 % Param.width = 0.6;
 % Param.length = 0.6;
 % Param.height = 0.3;

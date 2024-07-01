@@ -23,7 +23,7 @@ Param.Rad = 5;        % radius of circle
 Param.omn = 1;
 Param.dphase = -pi/12;% ref circle angular difference between drones
 Param.ref_mode = 3; % reference: 1 - square wave; 2 - circle
-Param.Vw = [15;0;0];
+Param.Vw = [-15;0;0];
 
 % M690B drone
 % (guessing parameters! needs identification)
@@ -100,7 +100,7 @@ for iD = 1:Param.nD
         dot_dot_dot_x = r*omn^3*sin(omn*t);
         dot_dot_dot_y = -r*omn^3*cos(omn*t);
         
-         if  iD == 2
+         if  iD == 1
             factor = 0;
         else
             factor = 1;
@@ -120,7 +120,7 @@ for iD = 1:Param.nD
         
         p0{iD} = [2;3;0];
         
-         if iD == 2
+         if iD == 1
             phase{iD} = 0;
             %p_ref{iD} = [Param.Rad*cos(Param.omn*t+phase{iD});Param.Rad*sin(Param.omn*t+phase{iD});(1+dh*(iD-1))*ones(size(t))];
             v_ref{iD} = 0*[-Param.Rad*Param.omn*sin(Param.omn*t+phase{iD});Param.Rad*Param.omn*cos(Param.omn*t+phase{iD});0*ones(size(t))];

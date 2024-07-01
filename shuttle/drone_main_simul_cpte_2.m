@@ -5,15 +5,15 @@
 
 % Initialize arrays and variables for downwash values
 global vd_store_2;
-global v_air_store;
+global v_air_store_2;
 
 
 
-v_air_store = [0;0];
+v_air_store_2 = zeros(3,2);
 vd_store_2 = [0;0];
 dw = 0;
 tracking_sim = 0;
-v_air = [0;0;0];
+
 
 
 % main time loop for simulation
