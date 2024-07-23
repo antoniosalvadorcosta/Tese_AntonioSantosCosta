@@ -27,39 +27,39 @@ Param.Vw = [0;0;0];
 
 % M690B drone
 % (guessing parameters! needs identification)
-Param.m = 4;        % drone mass (added board)
-Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 0;
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([0.1,0.1,0.1]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
+% Param.m = 4;        % drone mass (added board)
+% Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
+% Param.D = 0;
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([0.1,0.1,0.1]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);
-% Param.ki = diag([0.1,0.1,0.1]);
-% Param.kR = diag([20,20,20]);
-% Param.kom= diag([0.2,0.2,0.2]);
+% Param.ki = 0*diag([0.1,0.1,0.1]);
+% Param.kR = diag([15,15,15]);
+% Param.kom= diag([1,1,1]);
 
 Param.d2_height = 2.0;
 
-%air density
-Param.air_d = 1.225;
-Param.arm_lenght = 0.33;
-Param.L = 0.799;
+% %air density
+% Param.air_d = 1.225;
+% Param.arm_lenght = 0.33;
+% Param.L = 0.799;
 
 %Projected Area
-Param.Pa = [0.57 0 0;
-    0 0.57 0;
-    0 0 0.475];
+% Param.Pa = [0.57 0 0;
+%     0 0.57 0;
+%     0 0 0.475];
 % Param.width = 0.6;
 % Param.length = 0.6;
 % Param.height = 0.3;
 % Param.Pa = (Param.width * Param.length)/2;
 
 % Rotor disk area
-Param.rotor_radius = 0.18;
-Param.A = pi*Param.rotor_radius^2;
+% Param.rotor_radius = 0.18;
+% Param.A = pi*Param.rotor_radius^2;
 
 % downwash
 Param.Cax = 0.1;
@@ -73,6 +73,9 @@ t = 0:Param.dTi:Param.Tend;
 nt = length(t);
 nx = 18;
 nu = 4;
+
+
+
 for iD = 1:Param.nD
     
     Nsim = Param.Nsim;
@@ -104,8 +107,8 @@ for iD = 1:Param.nD
     if iD == 2 % linear for drone 2
         
         phase{iD} = (iD-1)*Param.dphase;
-        p_ref{iD} = [t ;3*ones(size(t));Param.d2_height*ones(size(t))];
-        v_ref{iD} = [ones(size(t));zeros(size(t));zeros(size(t))];
+        p_ref{iD} = [s_factor*t ;3*ones(size(t));Param.d2_height*ones(size(t))];
+        v_ref{iD} = [s_factor*ones(size(t));zeros(size(t));zeros(size(t))];
 
         % Drone parado
 %         p_ref{iD} = [49*ones(size(t)) ;3*ones(size(t));Param.d2_height*ones(size(t))];
@@ -125,8 +128,8 @@ for iD = 1:Param.nD
         f = 7 * exp(-a*(t));
 
        
-        p_ref{iD} = [t; 3*ones(size(t)); f + Param.d2_height + Param.height_diff ];
-        v_ref{iD} = [ones(size(t));zeros(size(t)); -7*a*exp(-a*t)];
+        p_ref{iD} = [s_factor*t; 3*ones(size(t)); f + Param.d2_height + Param.height_diff ];
+        v_ref{iD} = [s_factor*ones(size(t));zeros(size(t)); -7*a*exp(-a*t)];
         a_ref{iD} = [zeros(size(t));zeros(size(t));  7*a^2*exp(-a*t) ];
         j_ref{iD} = [zeros(size(t));zeros(size(t));  -7*a^3*exp(a*t)];
         psi_ref{iD} = atan2(v_ref{iD}(2,:),v_ref{iD}(1,:));

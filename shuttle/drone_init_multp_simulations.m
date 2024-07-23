@@ -1,13 +1,9 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 
-% inicializations
-
-clear all;
-
 
 % Model and simulation parameters
-Param.Tend = 9;
+Param.Tend = 30;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
@@ -20,26 +16,26 @@ Param.psi_ref_static = pi/3;
 Param.vz_d = 0.1;
 Param.dh = 0.05;      % safety height difference between drones
 Param.Rad = 5;        % radius of circle
-Param.omn = 1;
+%Param.omn = 0;
 Param.dphase = -pi/12;% ref circle angular difference between drones
-Param.ref_mode = 3; % reference: 1 - square wave; 2 - circle
-Param.Vw = [-15;0;0];
+Param.ref_mode = 3; % reference:  2 - circle
+%Param.Vw = [0;0;0];
 
 % M690B drone
 % (guessing parameters! needs identification)
 Param.m = 4;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
 Param.D = 0;
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([2,2,2]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([2,2,2]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);
-% Param.ki = diag([0.1,0.1,0.1]);
-% Param.kR = diag([20,20,20]);
-% Param.kom= diag([0.2,0.2,0.2]);
+% Param.ki = 0*diag([0.1,0.1,0.1]);
+% Param.kR = diag([15,15,15]);
+% Param.kom= diag([1,1,1]);
 
 
 %air density

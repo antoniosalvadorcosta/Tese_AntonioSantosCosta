@@ -10,38 +10,38 @@ P = Param;
 global vd_store;
 
 if P.scenario == 1
-    imgs_folder = 'figures/mellinger/sc1_';
+    imgs_folder = 'simulacoes/mellinger/sc1_';
 end
 
 if P.scenario == 2
     scenario_dcrpt = "Naive Scenario";
-    imgs_folder = 'figures/mellinger/sc2_';
+    imgs_folder = 'simulacoes/mellinger/sc2_';
 end
 
 if P.scenario == 3
     scenario_dcrpt = "Feed Forward";
-    imgs_folder = 'figures/rotor_drag/sc3_';
+    imgs_folder = 'simulacoes/rotor_drag/sc3_';
 end
 
 if P.scenario == 4
     scenario_dcrpt = "Rotor Drag Compensation";
-    imgs_folder = 'figures/rotor_drag/sc4_';
+    imgs_folder = 'simulacoes/rotor_drag/sc4_';
 end
 
 if P.scenario > 4 && P.scenario ~= 6
     scenario_dcrpt = "Rotor Drag and Frame Drag Compensation";
-    imgs_folder = 'figures/rotor_drag/sc5_';
+    imgs_folder = 'simulacoes/rotor_drag/sc5_';
 end
 
 if P.scenario == 6
     scenario_dcrpt = "Capture maneuvre";
-    imgs_folder = 'figures/capture_maneuvre/sc6_';
+    imgs_folder = 'simulacoes/capture_maneuvre/sc6_';
 end
 
 
 if situation == 1
     scenario_dcrpt = "4 scenarios (2,3,4,5) simulated at once";
-    imgs_folder = 'figures/4_scenarios/allsc_';
+    imgs_folder = 'simulacoes/4_scenarios/allsc_';
 end 
 
 saves_folder = 'saves/';

@@ -1,4 +1,4 @@
-drone_init_5;
+
 
  set(0,'defaultTextInterpreter','latex');
     set(0,'defaultLegendInterpreter','latex');

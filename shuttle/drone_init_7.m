@@ -43,31 +43,31 @@ Param.kom= diag([1,1,1]);
 
 Param.d2_height = 3.05;
 
-%air density
-Param.air_d = 1.225;
-
-
-
-Param.arm_lenght = 0.33;
-Param.L = 2*Param.arm_lenght;
-
-%Projected Area
-Param.Pa = [0.6 0 0;
-    0 0.6 0;
-    0 0 0.5];
-% Param.width = 0.6;
-% Param.length = 0.6;
-% Param.height = 0.3;
-% Param.Pa = (Param.width * Param.length)/2;
-
-% Rotor disk area 
-Param.rotor_radius = 0.18;
-Param.A = pi*Param.rotor_radius^2;
-
-% downwash
-
-Param.d_k = 0.6;                  % between 0 and 1
-Param.d_h = 2*Param.rotor_radius; % rotor diameter or slightly larger
+% %air density
+% Param.air_d = 1.225;
+% 
+% 
+% 
+% Param.arm_lenght = 0.33;
+% Param.L = 2*Param.arm_lenght;
+% 
+% %Projected Area
+% Param.Pa = [0.6 0 0;
+%     0 0.6 0;
+%     0 0 0.5];
+% % Param.width = 0.6;
+% % Param.length = 0.6;
+% % Param.height = 0.3;
+% % Param.Pa = (Param.width * Param.length)/2;
+% 
+% % Rotor disk area 
+% Param.rotor_radius = 0.18;
+% Param.A = pi*Param.rotor_radius^2;
+% 
+% % downwash
+% 
+% Param.d_k = 0.6;                  % between 0 and 1
+% Param.d_h = 2*Param.rotor_radius; % rotor diameter or slightly larger
 
 % initialize variables for all drones:
 t = 0:Param.dTi:Param.Tend;

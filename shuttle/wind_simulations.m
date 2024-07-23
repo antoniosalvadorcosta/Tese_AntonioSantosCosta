@@ -5,7 +5,7 @@
 % Summary: Group of basic simulations to know the drone trajectory tracking
 % under various speed values
 
-clear all;
+%clear all;
 
 
 % Model and simulation parameters
@@ -32,31 +32,32 @@ Param.omn = 1;
 
 
 %air density
-Param.air_d = 1.225;
-Param.Pa = [0.57 0 0;
-    0 0.57 0;
-    0 0 0.475];
-%Area swept by the rotor
-Param.rotor_radius = 0.18;
-Param.A = pi*Param.rotor_radius^2;
+% Param.air_d = 1.225;
+% Param.Pa = [0.57 0 0;
+%     0 0.57 0;
+%     0 0 0.475];
+% %Area swept by the rotor
+% Param.rotor_radius = 0.18;
+% Param.A = pi*Param.rotor_radius^2;
 
 
 % M690B drone 
 % (guessing parameters! needs identification)
-Param.m = 4;        % drone mass (added board)
-Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 0.00;     % frame drag coeficient
+% Param.m = 4;        % drone mass (added board)
+% Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
+% Param.D = 0.00;     % frame drag coeficient
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);
 % Param.ki = zeros(3);
 % Param.kR = diag([15,15,15]);
+% Param.kom= diag([1,1,1]); 
+
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([2,2,2]);
+% Param.kR = diag([30,30,30]);
 % Param.kom= diag([1,1,1]);
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([2,2,2]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
 
 
 % initialize variables for all drones:

@@ -6,7 +6,7 @@
 % Summary: Group of basic simulations to know the drone trajectory tracking
 % under various speed values
 
-clear all;
+%clear all;
 
 
 % Model and simulation parameters
@@ -32,13 +32,13 @@ Param.ref_mode = 2; % reference: 1 - square wave; 2 - circle
 Param.Vw = [0;0;0];
 
 %air density
-Param.air_d = 1.225;
-Param.Pa = [0.57 0 0;
-    0 0.57 0;
-    0 0 0.475];
-%Area swept by the rotor
-Param.rotor_radius = 0.18;
-Param.A = pi*Param.rotor_radius^2;
+% Param.air_d = 1.225;
+% Param.Pa = [0.57 0 0;
+%     0 0.57 0;
+%     0 0 0.475];
+% %Area swept by the rotor
+% Param.rotor_radius = 0.18;
+% Param.A = pi*Param.rotor_radius^2;
 
 
 % M690B drone 
@@ -52,11 +52,11 @@ Param.D = 0.00;     % frame drag coeficient
 % Param.ki = zeros(3);
 % Param.kR = diag([15,15,15]);
 % Param.kom= diag([1,1,1]);
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([2,2,2]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([2,2,2]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
 
 
 % initialize variables for all drones:
@@ -122,7 +122,6 @@ rearrangedMatrix = reshape(rmse_values, 4, 4);
 rmse_values = round(rearrangedMatrix, 3);
 
 fprintf('\n\n\n ');
-
 fprintf('1 & %f & %f & %f & %f\n',rmse_values(1,1),rmse_values(1,2),rmse_values(1,3),rmse_values(1,4));
 fprintf('2 & %f & %f & %f & %f\n',rmse_values(2,1),rmse_values(2,2),rmse_values(2,3),rmse_values(2,4));
 fprintf('5 & %f & %f & %f & %f\n',rmse_values(3,1),rmse_values(3,2),rmse_values(3,3),rmse_values(3,4));

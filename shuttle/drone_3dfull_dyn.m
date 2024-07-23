@@ -1,7 +1,7 @@
 function [dp,dv,dR,dom, v_air] = drone_3dfull_dyn(v,R,om,T,tau,P)
 %DRONE_MODEL Summary of this function goes here
 %   Detailed explanation goes here
-
+global v_air_store;
 % auxiliary variables
 zW = [0;0;1];
 zB = R(:,3);
@@ -37,7 +37,7 @@ if P.scenario > 1
         disp(T);
     else
         v_air = v - vw;
-
+        v_air_store = v_air;
     end
     
     % rotor drag acceleration

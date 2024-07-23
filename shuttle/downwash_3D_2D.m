@@ -1,5 +1,5 @@
 %% 2D Simulation
-imgs_folder = 'figures/capture_maneuvre/cpt_';
+imgs_folder = 'simulacoes/capture_maneuvre/cpt_';
 saves_folder = 'saves/';
 if ~exist('filename','var') || isempty(filename)
     %filename = [datestr(now,30) '_simul_'];
@@ -16,14 +16,14 @@ do_save_workspace = 0; % set to 1 to save workspace to *.mat file
 Param.Vw = [0;0;0];
 % drones' characteristics
 
-m =4;
-rotor_r = 0.18;
+m =3.55;
+rotor_r = 0.23;
 Total_T = m * 9.81;
 
 T1 = Total_T / 4;
 disk_area = pi*rotor_r^2;
-arm_length = 0.395;
-L = arm_length * 2;
+arm_length = 0.385;
+Param.L = arm_length * 2;
 v1 = [0;0;0];
 air_d = 1.225;
 
@@ -101,10 +101,6 @@ print2pdf([imgs_folder filename '_2D'],do_print);
 
 
 %% 3D Vectorial field
-
-
-
-
 z_r = 2.5;
 x_r = 2.5;
 y_r = 2.5;
@@ -190,7 +186,6 @@ z_r = 2.5;
 x_r = 2;
 y_r = 2;
 
-
 p1 = [x_r;y_r;z_r];
 
 % Define the position of the rotor disk
@@ -257,8 +252,6 @@ for i = 1:size(X, 1)
         end
     end
 end
-
-
 
  w(w<nv) = 0;
 

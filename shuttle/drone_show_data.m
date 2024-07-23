@@ -11,38 +11,38 @@ global vd_store;
 
 if P.scenario == 1
     scenario_dcrpt = "Basic controller";
-    imgs_folder = 'figures/mellinger/sc1_';
+    imgs_folder = 'simulacoes/scenario1/sc1_';
 end
 
 if P.scenario == 2
     scenario_dcrpt = "Naive Scenario";
-    imgs_folder = 'figures/mellinger/sc2_';
+    imgs_folder = 'simulacoes/scenario2/sc2_';
 end
 
 if P.scenario == 3
     scenario_dcrpt = "Feed Forward";
-    imgs_folder = 'figures/rotor_drag/sc3_';
+    imgs_folder = 'simulacoes/rotor_drag/sc3_';
 end
 
 if P.scenario == 4
     scenario_dcrpt = "Rotor Drag Compensation";
-    imgs_folder = 'figures/rotor_drag/sc4_';
+    imgs_folder = 'simulacoes/rotor_drag/sc4_';
 end
 
 if P.scenario > 4 && P.scenario ~= 6
     scenario_dcrpt = "Rotor Drag and Frame Drag Compensation";
-    imgs_folder = 'figures/rotor_drag/sc5_';
+    imgs_folder = 'simulacoes/rotor_drag/sc5_';
 end
 
 if P.scenario == 6
     scenario_dcrpt = "Capture maneuvre";
-    imgs_folder = 'figures/capture_maneuvre/sc6_';
+    imgs_folder = 'simulacoes/capture_maneuvre/sc6_';
 end
 
 
 if situation == 1
     scenario_dcrpt = "4 scenarios (2,3,4,5) simulated at once";
-    imgs_folder = 'figures/4_scenarios/allsc_';
+    imgs_folder = 'simulacoes/4_scenarios/allsc_';
 end 
 
 saves_folder = 'saves/';
@@ -219,9 +219,9 @@ if show_simulations_plots ~= 0
         legend('Drone 1', 'Drone 2')
     end
     ylabel('$$T(t)$$ [N]');
-     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%      if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     title('Control variables');
     subplot(412);
     plot(t,tau{1}(1,:),'Color',dcolors{1});
@@ -232,9 +232,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\tau_1(t)$$ [N m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     
     subplot(413);
     plot(t,tau{1}(2,:),'Color',dcolors{1});
@@ -245,9 +245,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\tau_2(t)$$ [N m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-     end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%      end
     
     subplot(414);
     plot(t,tau{1}(3,:),'Color',dcolors{1});
@@ -367,9 +367,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$v_x(t)$$ [m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     title('Drone velocity and reference');
 
     % Velocity in Y direction
@@ -384,9 +384,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$v_y(t)$$ [m]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
 
     % Velocity in Z direction
     subplot(313);
@@ -420,9 +420,9 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\phi(t)$$ [deg]');
     title('Attitude (euler angles)');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     
     subplot(312);
     plot(t,lbd{1}(2,:)*180/pi,'Color',dcolors{1});
@@ -432,9 +432,9 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     ylabel('$$\theta(t)$$ [deg]');
     
     subplot(313);
@@ -465,9 +465,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\omega_x(t)$$ [deg/s]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     title('Angular velocity');
     subplot(312);
     plot(t,x{1}(17,:)*180/pi,'Color',dcolors{1});
@@ -478,9 +478,9 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     ylabel('$$\omega_y(t)$$ [deg/s]');
-    if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone')
-    end
+%     if P.scenario == 6
+%         legend('Shutle Drone', 'Target Drone')
+%     end
     subplot(313);
     plot(t,x{1}(18,:)*180/pi,'Color',dcolors{1});
     hold on;

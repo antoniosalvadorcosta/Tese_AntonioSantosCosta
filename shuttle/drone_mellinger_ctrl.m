@@ -2,7 +2,7 @@
 % Project Capture
 % Bruno Guerreiro (bj.guerreiro@fct.unl.pt)
 function [T,tau,e_p] = drone_mellinger_ctrl(p,v,R,om,P,p_d,psi_d,ie_p,v_d,dpsi_d,a_d,j_d,iD,v_air)
-
+ 
 %     if ~exist('dpsi_d','var') || isempty(dpsi_d), dpsi_ref = 0; end
 %     if ~exist('ie_p','var') || isempty(ie_p), ie_p = zeros(3,1); end
 %     if ~exist('v_d','var') || isempty(v_d), v_d = zeros(3,1); end

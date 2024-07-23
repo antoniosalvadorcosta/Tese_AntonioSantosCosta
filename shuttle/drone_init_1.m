@@ -3,11 +3,11 @@
 
 % inicializations
 
-clear all;
+% clear all;
 
 
 % Model and simulation parameters
-Param.Tend = 8;
+Param.Tend = 10;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period
 Nsim = round(Param.Tend/Param.dTi)+1;
 Param.g = 9.81;     % earth gravity
@@ -35,14 +35,14 @@ Param.D = 0.00;     % frame drag coeficient
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);
-% Param.ki = zeros(3);
+% Param.ki = diag([0.1,0.1,0.1]);
 % Param.kR = diag([15,15,15]);
 % Param.kom= diag([1,1,1]);
-Param.kp = diag([20,20,20]);
-Param.kv = diag([10,10,10]);
-Param.ki = 0*diag([2,2,2]);
-Param.kR = diag([30,30,30]);
-Param.kom= diag([1,1,1]);
+% Param.kp = diag([20,20,20]);
+% Param.kv = diag([10,10,10]);
+% Param.ki = 0*diag([0.1,0.1,0.1]);
+% Param.kR = diag([30,30,30]);
+% Param.kom= diag([1,1,1]);
 
 % Param.kp = diag([20,20,20]);
 % Param.kv = diag([10,10,10]);
@@ -53,13 +53,13 @@ Param.kom= diag([1,1,1]);
 Param.Vw = [0;0;0];
 
 %air density
-Param.air_d = 1.225;
-Param.Pa = [0.57 0 0;
-    0 0.57 0;
-    0 0 0.475];
-%Area swept by the rotor
-Param.rotor_radius = 0.18;
-Param.A = pi*Param.rotor_radius^2;
+% Param.air_d = 1.225;
+% Param.Pa = [0.57 0 0;
+%     0 0.57 0;
+%     0 0 0.475];
+% %Area swept by the rotor
+% Param.rotor_radius = 0.18;
+% Param.A = pi*Param.rotor_radius^2;
 
 % initialize variables for all drones:
 t = 0:Param.dTi:Param.Tend;
@@ -83,14 +83,15 @@ for iD = 1:Param.nD
     
     if Param.ref_mode == 1 % square wave reference
         % Define synchronization time
-        t_step = 8;
+        t_step = 10;
+        step_h = 2;
 
         % Generate switching signal
-        sw1 = mod(t,t_step) >= 5; % position
+        sw1 = mod(t,t_step) >= 4; % position
         sw2 = mod(t,t_step) >= 2; % yaw angle
 
         % Define position reference
-        p_ref{iD} = (p0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.p_ref_static*sw1)*2;
+        p_ref{iD} = (p0{iD}*ones(1,Param.Tend/Param.dTi+1) + Param.p_ref_static*sw1)*step_h;
 
         % Set velocity, acceleration, and jerk references to zeros
         v_ref{iD} = zeros(3,nt);

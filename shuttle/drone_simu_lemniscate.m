@@ -3,7 +3,9 @@
 
 % Summary: simulate simple dynamic system model of a drone
 
-
+ global v_air_store;
+v_air_store = zeros(3,1);  
+ 
 % main time loop for simulation
 for k = 1:Nsim
     for iD = 1:Param.nD
@@ -22,7 +24,8 @@ for k = 1:Nsim
             Param.scenario = 5;
         end
             
-          
+       
+        
         % get state vector
         p{iD} = x{iD}(1:3,k);
         v{iD} = x{iD}(4:6,k);
@@ -40,11 +43,16 @@ for k = 1:Nsim
         % mellinger controller
         [T{iD}(:,k),tau{iD}(:,k),e_p] = drone_mellinger_ctrl(p{iD},v{iD},R,om,Param,p_d,psi_d,xiep{iD}(:,k),v_d,dpsi_d,a_d,j_d);
         
+      
+        
         % integrate position error
         xiep{iD}(:,k+1) = xiep{iD}(:,k) + Param.dTi*e_p;
         
         % nonlinear drone model (continuous time)
         [dot_p,dot_v,dot_R,dot_om] = drone_3dfull_dyn(v{iD},R,om,T{iD}(:,k),tau{iD}(:,k),Param);
+        
+      
+        v_air{iD}(:,k) = v_air_store;
         
         % discretization 
         pp = p{iD} + Param.dTi*dot_p;
