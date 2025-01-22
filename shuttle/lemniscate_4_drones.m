@@ -1,6 +1,7 @@
 
 % general initialization
 %clear all;
+drone_init_all;
 tracking_sim = 0;
 Param.Tend = 30;
 Param.dTi = 0.001;  % inner-loop and simulation sampling period

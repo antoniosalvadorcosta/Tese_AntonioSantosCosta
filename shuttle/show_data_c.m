@@ -146,9 +146,9 @@ else
         fprintf('%f\n',rmse_value2);
         
         fprintf('\n Max Thrust Basic: %f', max(T{2}));
-        fprintf('\n Max Thrust Full: %f', max(T{3}));
+        fprintf('\n Max Thrust Complete: %f', max(T{3}));
         fprintf('\n Max vd Basic: %f', max(vd{1}));
-        fprintf('\n Max vd Full: %f', max(vd{2}));
+        fprintf('\n Max vd Complete: %f', max(vd{2}));
         
     else
         if P.scenario == 7
@@ -186,7 +186,7 @@ if show_simulations_plots ~= 0
     %     sstlightergreen = [160,255,225]/255;
     %     sstgray         = [70,70,70]/255;
     %     sstlightgray    = [200,200,200]/255;
-    %     sstred          = [255, 0, 0]/255;  % Vivid red
+    %     sstred          = [255, 0, 0]/255; % Vivid red
     %     sstbrown        = [165, 42, 42]/255; % Medium brown
     %     sstgray         = [70,70,70]/255;
     %     yellow          = [187, 139, 25]/255;
@@ -200,7 +200,7 @@ if show_simulations_plots ~= 0
     
     if situation == 0
         figure(100);
-        title('Drones 3D trajectory');
+        
         for iD = 1:Param.nD
             hini{iD} = plot3(p{iD}(1,1),p{iD}(2,1),p{iD}(3,1),'o','Color',dcolors{iD},'MarkerSize',2);
             if iD == 1, hold on; end
@@ -221,11 +221,13 @@ if show_simulations_plots ~= 0
         hold off;
         %grid on;
         axis equal;
+        title('3D trajectory');
         % axis([-1.2 1.2 -1.2 1.2 0 3]);
         xlabel('x [m]');
+        
         ylabel('y [m]');
         zlabel('z [m]');
-        legend('Start Shutle Drone' ,'End Shutle Drone', 'Start Target Drone' ,'End Target Drone', 'Start Target Drone Full', ' End Target Drone Full');
+        legend('Start Shutle Drone' ,'End Shutle Drone', 'Start Target Drone' ,'End Target Drone', 'Start Target Drone Complete', ' End Target Drone Complete');
         
         print2pdf([imgs_folder filename '_traj'],do_print);
         
@@ -244,7 +246,7 @@ if show_simulations_plots ~= 0
     
     ylabel('$$T(t)$$ [N]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     title('Control variables');
     subplot(412);
@@ -257,7 +259,7 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\tau_1(t)$$ [N m]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     
     subplot(413);
@@ -270,7 +272,7 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\tau_2(t)$$ [N m]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     
     subplot(414);
@@ -284,7 +286,7 @@ if show_simulations_plots ~= 0
     xlabel('$$t$$ [s]');
     ylabel('$$\tau_3(t)$$ [N m]');
     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+        legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     end
     print2pdf([imgs_folder filename '_act'],do_print);
     
@@ -303,11 +305,11 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     
-%     legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%     legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     
     ylabel('$$x(t)$$ [m]');
     
-    title('Drone position');
+    title('Position');
     
     
     
@@ -327,7 +329,7 @@ if show_simulations_plots ~= 0
 %     if P.scenario ~= 6
 %         legend('Y Reference', 'Y Position')
 %     else
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     ylabel('$$y(t)$$ [m]');
     
@@ -351,7 +353,7 @@ if show_simulations_plots ~= 0
     if P.scenario ~= 6
         legend('Z Reference', 'Z Position')
     else
-        legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+        legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     end
     xlabel('$$t$$ [s]');
     ylabel('$$z(t)$$ [m]');
@@ -382,9 +384,9 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$v_x(t)$$ [m]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
-    title('Drone velocity and reference');
+    title('Velocity');
     
     % Velocity in Y direction
     subplot(312);
@@ -399,7 +401,7 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$v_y(t)$$ [m]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
 %     
     % Velocity in Z direction
@@ -416,7 +418,7 @@ if show_simulations_plots ~= 0
     xlabel('$$t$$ [s]');
     ylabel('$$v_z(t)$$ [m]');
     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+        legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     end
     
     print2pdf([imgs_folder filename '_vel'],do_print);
@@ -435,7 +437,7 @@ if show_simulations_plots ~= 0
     ylabel('$$\phi(t)$$ [deg]');
     title('Attitude (euler angles)');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
 %     
     subplot(312);
@@ -447,7 +449,7 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     ylabel('$$\theta(t)$$ [deg]');
     
@@ -464,7 +466,7 @@ if show_simulations_plots ~= 0
     xlabel('$$t$$ [s]');
     ylabel('$$\psi(t)$$ [deg]');
     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+        legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     end
     print2pdf([imgs_folder filename '_eul'],do_print);
     
@@ -480,7 +482,7 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\omega_x(t)$$ [deg/s]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     title('Angular velocity');
     subplot(312);
@@ -493,7 +495,7 @@ if show_simulations_plots ~= 0
     grid on;
     ylabel('$$\omega_y(t)$$ [deg/s]');
 %     if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+%         legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
 %     end
     subplot(313);
     plot(t,x{1}(18,:)*180/pi,'Color',dcolors{1});
@@ -506,7 +508,7 @@ if show_simulations_plots ~= 0
     xlabel('$$t$$ [s]');
     ylabel('$$\omega_z(t)$$ [deg/s]');
     if P.scenario == 6
-        legend('Shutle Drone', 'Target Drone', 'Target Drone Full');
+        legend('Shutle Drone', 'Target Drone', 'Target Drone Complete');
     end
     print2pdf([imgs_folder filename '_om'],do_print);
     
@@ -541,7 +543,7 @@ if show_simulations_plots ~= 0
         hold off;
         grid on;
         xlabel('$$t$$ [s]');
-        legend('Target Drone', 'Target Drone Full')
+        legend('Target Drone', 'Target Drone Complete')
         ylabel('$$v_{dw}(t)$$ [m/s]');
         print2pdf([imgs_folder filename '_dw'],do_print);
         
@@ -556,8 +558,8 @@ if show_simulations_plots ~= 0
         hold off;
         grid on;
         ylabel('$$v_{air_x}(t)$$ [m/s]');
-%         legend( 'Target Drone', 'Target Drone Full');
-        title('Drones air ir relative velocity');
+%         legend( 'Target Drone', 'Target Drone Complete');
+        title('Air ir relative velocity');
         
         % Velocity in Y direction
         subplot(312);
@@ -567,7 +569,7 @@ if show_simulations_plots ~= 0
         hold off;
         grid on;
         ylabel('$$v_{air_y}(t)$$ [m/s]');
-%         legend( 'Target Drone', 'Target Drone Full');
+%         legend( 'Target Drone', 'Target Drone Complete');
        
         % Velocity in Z direction
         subplot(313);
@@ -578,15 +580,15 @@ if show_simulations_plots ~= 0
         grid on;
         xlabel('$$t$$ [s]');
         ylabel('$$v_{air_z}(t)$$ [m/s]');
-        legend('Target Drone', 'Target Drone Full');
+        legend('Target Drone', 'Target Drone Complete');
         print2pdf([imgs_folder filename '_air_vel'],do_print);
         
     end
     
     fprintf('\n Max Thrust Basic: %f', max(T{2}));
-    fprintf('\n Max Thrust Full: %f', max(T{3}));
+    fprintf('\n Max Thrust Complete: %f', max(T{3}));
     fprintf('\n Max vd Basic: %f', max(vd{1}));
-    fprintf('\n Max vd Full: %f', max(vd{2}));
+    fprintf('\n Max vd Complete: %f', max(vd{2}));
     
     if do_save_workspace
         save([saves_folder filename '.mat']);
@@ -596,6 +598,6 @@ if show_simulations_plots ~= 0
     % if P.scenario < 6
     %     disp("Not displaying animation")
     %else
-    % drone_animate(p,p_ref,lbd,t,dcolors);
+     drone_animate(p,p_ref,lbd,t,dcolors);
     % end
 end

@@ -13,11 +13,8 @@ A = P.Pa;
 vw = P.Vw;
 kh = 0.09;
 
-% rotor drag coeficient
-dx = 0.50;
-dy = 0.39;
-dz = 0.11;
-D = diag ([dx, dy, dz]);
+ 
+D = P.D;
 
 % equations of motion
 if P.scenario <= 1

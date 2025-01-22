@@ -62,8 +62,8 @@ Param.d2_height = 2.0;
 % Param.A = pi*Param.rotor_radius^2;
 
 % downwash
-Param.Cax = 0.1;
-Param.Crad = 1.5;
+%Param.Cax = 0.1;
+%Param.Crad = 1.5;
 
 % Param.k = 0.6;                  % between 0 and 1
 % Param.h = 2*Param.rotor_radius; % rotor diameter or slightly larger

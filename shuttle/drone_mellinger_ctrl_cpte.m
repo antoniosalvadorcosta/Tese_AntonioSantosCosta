@@ -22,11 +22,8 @@ if P.scenario > 2
     A = P.Pa;
 end
 
-% rotor drag coeficient
-dx = 0.50;
-dy = 0.39;
-dz = 0.11;
-D = diag ([dx, dy, dz]);
+ 
+D = P.D;
 
 % define translation errors
 e_p = p - p_d;
@@ -38,7 +35,7 @@ if dw_on == 1
     
     % if the other drone at higher altitude
     if p_above(3) > p(3)
-        dw = - f_dw3_0(p_above,p,T_above,P);
+        dw = - f_dw2(p_above,p,T_above,P);
         v_air_drone_below = v -P.Vw - [0;0;dw];
    
         vd_store_2 = [vd_store_2; dw];
@@ -56,7 +53,7 @@ else
     % the other drone is above, still store the downwash values
     if p_above(3) > p(3)
         
-        dw =  -f_dw3_0(p_above,p,T_above,P);
+        dw =  -f_dw2(p_above,p,T_above,P);
         vd_store = [vd_store; dw];
        
          aux = v+P.Vw;

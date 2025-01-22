@@ -29,7 +29,9 @@ function handle = drone_plot(pos,lbd,handle,dcolor)
 %     scale = 1;   % iris
 %     scale = 0.3; % crazyflie
     arm_colors = [ [70,70,70]/255;
-                   [90,90,90]/255 ];
+                   [90,90,90]/255;
+                   [43,191,92]/255; %green
+                   [0, 0, 0]/255 ];
         
     rot = Euler2R(lbd)*internal_rot_axis;
     pos = pos';
@@ -108,7 +110,7 @@ function handles = draw_square_arm(rot,pos,esc,drot,dpos,arm_colors,handles,idx,
         set(handles(2*idx,:),'xdata',pts_props(1,:),'ydata',pts_props(2,:),'zdata',pts_props(3,:));
     else
         handles(2*idx-1,:) = plot3(pts_arm(1,:),pts_arm(2,:),pts_arm(3,:),'-','LineWidth',0.4,'Color',arm_colors(1,:));
-        handles(2*idx,:) = plot3(pts_props(1,:),pts_props(2,:),pts_props(3,:),'-','LineWidth',0.1,'Color',arm_colors(2,:));
+        handles(2*idx,:) = plot3(pts_props(1,:),pts_props(2,:),pts_props(3,:),'-','LineWidth',1.5,'Color',arm_colors(4,:));
     end
       
 end

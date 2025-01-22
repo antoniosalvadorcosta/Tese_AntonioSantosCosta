@@ -44,7 +44,7 @@ situation = 0;
 % % (guessing parameters! needs identification)
 % Param.m = 4;        % drone mass (added board)
 % Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 0.00;     % frame drag coeficient
+ 
 % Gains for nonlinear controller (crazyflie): OK with dTi = 0.001 (not OK for dTi >0.05)
 % Param.kp = diag([10,10,6]);
 % Param.kv = diag([5,5,5]);

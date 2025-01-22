@@ -1,5 +1,15 @@
 
 
+
+situation = 0;
+
+drone_main_simul;
+
+tracking_sim = 0;
+show_simulations_plots = 1;
+
+
+
  set(0,'defaultTextInterpreter','latex');
     set(0,'defaultLegendInterpreter','latex');
     sstblue         = [0,128,255]/255;
@@ -17,14 +27,5 @@
     yellow          = [187, 139, 25]/255;
     dcolors = { sstgreen, sstblue, sstlightblue, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
     
-    %dcolors = { sstred, sstblue, yellow, sstbrown, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
-
-
-situation = 0;
-
-drone_main_simul;
-
-tracking_sim = 0;
-show_simulations_plots = 1;
 
 drone_show_data;

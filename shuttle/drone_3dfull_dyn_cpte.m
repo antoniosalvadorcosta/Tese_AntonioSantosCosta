@@ -19,10 +19,8 @@ b = 3.7 * 10 ^ - 7;
 
 
 % rotor drag coeficient
-dx = 0.50;
-dy = 0.39;
-dz = 0.11;
-D = diag ([dx, dy, dz]);
+ 
+D = P.D;
 
 if T < 0
     disp('Drone unstable (model)!');
@@ -37,7 +35,7 @@ end
 
 if other_p(3) > p(3)
     
-    dw = - f_dw3_0(other_p,p,other_T, P);
+    dw = - f_dw2(other_p,p,other_T, P);
     v_air = v - P.Vw - [0;0;dw];
         
     v_air_store_2 = [v_air_store_2, v_air];

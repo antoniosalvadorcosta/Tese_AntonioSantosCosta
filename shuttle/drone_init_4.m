@@ -30,7 +30,7 @@ Param.Vw = [0;0;0];
 % (guessing parameters! needs identification)
 Param.m = 5;        % drone mass (added board)
 Param.I = diag([2e-2,2e-2,3e-2]);  % inertia tensor
-Param.D = 0;     % frame drag coeficient (small diference)
+ 
 Param.kp = diag([20,20,20]);
 Param.kv = diag([10,10,10]);
 Param.ki = diag([2,2,2]);

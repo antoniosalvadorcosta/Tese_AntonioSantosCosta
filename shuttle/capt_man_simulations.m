@@ -5,8 +5,8 @@
 
 % Summary: simulate capture maneuvre
 
-%clear all;
-
+clear all;
+clf;
  set(0,'defaultTextInterpreter','latex');
     set(0,'defaultLegendInterpreter','latex');
     sstblue         = [0,128,255]/255;
@@ -30,14 +30,15 @@
 
 %----------------------------- height difference above 2 rotor radius
 
-% situation of the simulation of the 4 drones in drone_show_data (in this case should be 0);
-situation = 0;
 
 s_factor = 1;
+
 % drones safety distance
 Param.height_diff = 0.5;
 
 fprintf('\n\n-------------- 0.5 -----------\n');
+
+Param.use = 1;
 drone_init_6;
 
 % flag for controller downwash compensation
@@ -56,92 +57,94 @@ drone_main_simul_cpte_2;
 
 show_simulations_plots = 1;
 
-show_data_c;
-
-%-------------------- 0.70 ------------------------------------------
+% situation of the simulation of the 4 drones in drone_show_data (in this case should be 0);
 situation = 0;
-
-% drones safety distance
-Param.height_diff = 0.7;
-
-fprintf('\n\n-------------- 0.7 -----------\n');
-drone_init_6;
-
-% flag for controller downwash compensation
-dw_comp = 0;
-
-drone_main_simul_cpte;
-
-
-drone_init_6_part2;
-
-dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
-% 
-% flag for controller downwash compensation
-dw_comp = 1;
-
-drone_main_simul_cpte_2;
-
-show_simulations_plots = 0;
-
 show_data_c;
 
-
-%-------------------- 1.00 ------------------------------------------
-
-situation = 0;
-
-% drones safety distance
-Param.height_diff = 1;
-
-fprintf('\n\n-------------- 1.0 -----------\n');
-drone_init_6;
-
-% flag for controller downwash compensation
-dw_comp = 0;
-
-drone_main_simul_cpte;
-
-
-drone_init_6_part2;
-
-dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% %-------------------- 0.70 ------------------------------------------
+% situation = 0;
 % 
-% flag for controller downwash compensation
-dw_comp = 1;
-
-drone_main_simul_cpte_2;
-
-show_simulations_plots = 0;
-
-show_data_c;
-
-
-%-------------------- 2.00 ------------------------------------------
-
-situation = 0;
-
-% drones safety distance
-Param.height_diff = 2;
-
-fprintf('\n\n-------------- 2.0 -----------\n');
-drone_init_6;
-
-% flag for controller downwash compensation
-dw_comp = 0;
-
-drone_main_simul_cpte;
-
-
-drone_init_6_part2;
-
-dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% % drones safety distance
+% Param.height_diff = 0.7;
 % 
-% flag for controller downwash compensation
-dw_comp = 1;
-
-drone_main_simul_cpte_2;
-
-show_simulations_plots = 0;
-
-show_data_c;
+% fprintf('\n\n-------------- 0.7 -----------\n');
+% drone_init_6;
+% 
+% % flag for controller downwash compensation
+% dw_comp = 0;
+% 
+% drone_main_simul_cpte;
+% 
+% 
+% drone_init_6_part2;
+% 
+% dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% % 
+% % flag for controller downwash compensation
+% dw_comp = 1;
+% 
+% drone_main_simul_cpte_2;
+% 
+% show_simulations_plots = 0;
+% 
+% show_data_c;
+% 
+% 
+% %-------------------- 1.00 ------------------------------------------
+% 
+% situation = 0;
+% 
+% % drones safety distance
+% Param.height_diff = 1;
+% 
+% fprintf('\n\n-------------- 1.0 -----------\n');
+% drone_init_6;
+% 
+% % flag for controller downwash compensation
+% dw_comp = 0;
+% 
+% drone_main_simul_cpte;
+% 
+% 
+% drone_init_6_part2;
+% 
+% dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% % 
+% % flag for controller downwash compensation
+% dw_comp = 1;
+% 
+% drone_main_simul_cpte_2;
+% 
+% show_simulations_plots = 0;
+% 
+% show_data_c;
+% 
+% 
+% %-------------------- 2.00 ------------------------------------------
+% 
+% situation = 0;
+% 
+% % drones safety distance
+% Param.height_diff = 2;
+% 
+% fprintf('\n\n-------------- 2.0 -----------\n');
+% drone_init_6;
+% 
+% % flag for controller downwash compensation
+% dw_comp = 0;
+% 
+% drone_main_simul_cpte;
+% 
+% 
+% drone_init_6_part2;
+% 
+% dcolors = {sstred, sstgreen,sstblue, sstred, sstlighterblue, sstlightestblue, sstlightgreen, sstlightergreen, sstlightgray };
+% % 
+% % flag for controller downwash compensation
+% dw_comp = 1;
+% 
+% drone_main_simul_cpte_2;
+% 
+% show_simulations_plots = 0;
+% 
+% show_data_c;

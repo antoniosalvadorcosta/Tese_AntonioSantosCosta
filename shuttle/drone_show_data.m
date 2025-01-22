@@ -5,8 +5,6 @@
 % Summary: script that plots basic simulation results
 
 P = Param;
-
-
 global vd_store;
 
 if P.scenario == 1
@@ -198,6 +196,7 @@ if show_simulations_plots ~= 0
         xlabel('x [m]');
         ylabel('y [m]');
         zlabel('z [m]');
+        title('Drone 3D trajectory');
         legend('Start', 'Reference', 'end');
         
     print2pdf([imgs_folder filename '_traj'],do_print);
@@ -215,13 +214,7 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
-    if P.scenario == 6
-        legend('Drone 1', 'Drone 2')
-    end
     ylabel('$$T(t)$$ [N]');
-%      if P.scenario == 6
-%         legend('Shutle Drone', 'Target Drone')
-%     end
     title('Control variables');
     subplot(412);
     plot(t,tau{1}(1,:),'Color',dcolors{1});
@@ -283,11 +276,6 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
-    if P.scenario ~= 6
-        legend('X Reference', 'X Position')
-    else
-        legend('Shutle Drone', 'Target Drone')
-    end
     ylabel('$$x(t)$$ [m]');
     if P.scenario ~= 6
         title('Drone position and reference');
@@ -311,11 +299,6 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
-    if P.scenario ~= 6
-        legend('Y Reference', 'Y Position')
-    else
-        legend('Shutle Drone', 'Target Drone')
-    end
     ylabel('$$y(t)$$ [m]');
     
     %------------------------- Position Z
@@ -336,7 +319,7 @@ if show_simulations_plots ~= 0
     hold off;
     grid on;
     if P.scenario ~= 6
-        legend('Z Reference', 'Z Position')
+        legend('Position Reference', 'Position Real')
     else
         legend('Shutle Drone', 'Target Drone')
     end
@@ -401,10 +384,12 @@ if show_simulations_plots ~= 0
     grid on;
     xlabel('$$t$$ [s]');
     ylabel('$$v_z(t)$$ [m]');
-    if P.scenario == 6
+   
+    if P.scenario ~= 6
+        legend('Velocity Reference', 'Velocity Real')
+    else
         legend('Shutle Drone', 'Target Drone')
     end
-
     print2pdf([imgs_folder filename '_vel'],do_print);
     
     %-------------------------------- Attitude -------------------------------
@@ -438,8 +423,8 @@ if show_simulations_plots ~= 0
     ylabel('$$\theta(t)$$ [deg]');
     
     subplot(313);
-    plot(t,psi_ref{1}(1,:)*180/pi,'Color',sstgray);
-    hold on;
+    %plot(t,psi_ref{1}(1,:)*180/pi,'Color',sstgray);
+    %hold on;
     plot(t,lbd{1}(3,:)*180/pi,'Color',dcolors{1});
     for iD = 2:Param.nD
         plot(t,psi_ref{iD}(1,:)*180/pi,'Color',sstgray);
@@ -506,6 +491,7 @@ if show_simulations_plots ~= 0
     end
     hold off;
     grid on;
+    title('Yaw angle');
     xlabel('$$t$$ [s]');
     legend('Yaw Reference', 'Yaw Real')
     ylabel('$$\psi(t)$$ [deg]');
